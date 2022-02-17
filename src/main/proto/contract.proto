@@ -1,0 +1,47 @@
+syntax = "proto3";
+package proto;
+
+option java_multiple_files = true;
+option java_package = "generated";
+option java_outer_classname = "ProductsProtos";
+
+service product{
+  rpc addProduct(addProductRequest) returns (addProductResponse) {};
+  rpc listProduct(listProductRequest) returns (stream listProductResponse) {};
+  rpc listById(listByIdRequest) returns (listByIdResponse) {};
+}
+message listProductRequest{
+  int32    id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+message listProductResponse{
+  int32    id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+message showRequest {
+}
+message addProductRequest {
+  int32    id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+message addProductResponse{
+  int32    id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+message listByIdRequest{
+  int32    id = 1;
+}
+message listByIdResponse{
+  int32    id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
