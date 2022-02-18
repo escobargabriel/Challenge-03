@@ -1,15 +1,15 @@
 package DatabaseInteractin;
-
 import generated.addProductRequest;
 import generated.addProductResponse;
 import generated.listByIdRequest;
 import generated.listByIdResponse;
+import generated.listProductRequest;
+import generated.listProductResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Client {
@@ -31,8 +31,16 @@ public class Client {
       System.out.println("[4] - Finish execution");
       option = sc.nextInt();
       if (option == 1) {
-       //send a request to get the list of products and receive a message with the list
-        System.out.println("under construction");
+        try {
+          listProductRequest request = listProductRequest.newBuilder().build();
+          Iterator<listProductResponse> listProductResponseIterator = prodStub.listProduct(request);
+          while(listProductResponseIterator.hasNext()) {
+            listProductResponse next = listProductResponseIterator.next();
+            System.out.printf("Id: %d Name: %s Stock: %d Price: %f\n" ,next.getId(),next.getName(),next.getStock(), next.getPrice());
+          }
+        } catch (Exception e) {
+         e.printStackTrace();
+       }
       }
       if (option == 2) {
         System.out.println("Type product id: ");

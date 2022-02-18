@@ -30,15 +30,15 @@ public class DataBaseInteracting {
     }
   }
   public ResultSet getProductsById(int id) throws SQLException {
-    PreparedStatement preparedStatement = null;
-    String sql = null;
+    ResultSet resultSet = null;
     try {
-      sql = "select * from products where id =" + id;
-      preparedStatement = connection.prepareStatement(sql);
+      String sql = "select * from products where id =" + id;
+      PreparedStatement  preparedStatement = connection.prepareStatement(sql);
+      resultSet =  preparedStatement.executeQuery();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return preparedStatement.executeQuery(sql);
+    return resultSet;
   }
 
   public ResultSet createResultSet(PreparedStatement preparedStatement) throws SQLException {
