@@ -48,12 +48,6 @@
         <!--  https://mvnrepository.com/artifact/org.apache.arrow/arrow-vector  -->
         <dependency>
             <groupId>org.apache.arrow</groupId>
-            <artifactId>arrow-vector</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
-        </dependency>
-        <!--  https://mvnrepository.com/artifact/org.apache.arrow/arrow-memory-core  -->
-        <dependency>
-            <groupId>org.apache.arrow</groupId>
             <artifactId>arrow-memory-core</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>

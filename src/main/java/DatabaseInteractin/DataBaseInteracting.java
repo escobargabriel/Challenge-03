@@ -29,6 +29,7 @@ public class DataBaseInteracting {
       e.printStackTrace();
     }
   }
+
   public ResultSet getProductsById(int id) throws SQLException {
     ResultSet resultSet = null;
     try {
@@ -57,4 +58,5 @@ public class DataBaseInteracting {
     }
     return listProduct;
   }
+
 }

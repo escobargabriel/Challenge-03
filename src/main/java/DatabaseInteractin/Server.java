@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-
-
 public class Server {
   public static final Logger logger = Logger.getLogger(Server.class.getName());
 

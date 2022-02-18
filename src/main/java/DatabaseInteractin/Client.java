@@ -16,13 +16,9 @@ public class Client {
   public static void main(String[] args) throws SQLException {
     ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051).usePlaintext().build();
     productGrpc.productBlockingStub prodStub = productGrpc.newBlockingStub(channel);
-    // ProductService productService = new ProductService();
-    // DataBaseInteracting dataBaseInteracting = new DataBaseInteracting();
-
     Scanner sc = new Scanner(System.in);
     int option = 0;
     int aux = 0;
-
     do {
       System.out.println("Select one option:");
       System.out.println("[1] - List all products");
@@ -36,7 +32,7 @@ public class Client {
           Iterator<listProductResponse> listProductResponseIterator = prodStub.listProduct(request);
           while(listProductResponseIterator.hasNext()) {
             listProductResponse next = listProductResponseIterator.next();
-            System.out.printf("Id: %d Name: %s Stock: %d Price: %f\n" ,next.getId(),next.getName(),next.getStock(), next.getPrice());
+            System.out.printf("Id: %d Name: %s Stock: %d Price: %.2f\n" ,next.getId(),next.getName(),next.getStock(), next.getPrice());
           }
         } catch (Exception e) {
          e.printStackTrace();
@@ -64,7 +60,6 @@ public class Client {
         addProductResponse response = prodStub.addProduct(request);
         System.out.println(response.getName());
       }
-
       if (option == 4) {
         System.out.println("End of execution");
       }
@@ -81,4 +76,5 @@ public class Client {
     }while(aux == 1);
     sc.close();
   }
+
 }

@@ -10,15 +10,11 @@ import generated.listProductRequest;
 import generated.listProductResponse;
 import generated.productGrpc;
 import io.grpc.stub.StreamObserver;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ProductService extends productGrpc.productImplBase {
-  Scanner sc = new Scanner(System.in);
   ExecuteQuerys executeQuerys = new ExecuteQuerys();
   DataBaseInteracting dataBaseInteracting = new DataBaseInteracting();
 

@@ -8,8 +8,10 @@ import java.util.Scanner;
 public class ExecuteQuerys {
   DataBaseInteracting dataBaseInteracting = new DataBaseInteracting();
   Scanner sc = new Scanner(System.in);
+
   public ExecuteQuerys() throws SQLException {
   }
+
   public List<Product> listReturn() throws SQLException {
     List<Product> list;
     try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatement();
@@ -18,6 +20,7 @@ public class ExecuteQuerys {
     }
     return list;
   }
+
   public void insertIntoDataBase(String name, int stock, float price) {
     try{
     dataBaseInteracting.addProductToDatabase(name, stock, price);
@@ -25,6 +28,7 @@ public class ExecuteQuerys {
       e.printStackTrace();
     }
   }
+
   public ResultSet getById(int id){
     ResultSet resultSet = null;
     try{
@@ -34,4 +38,5 @@ public class ExecuteQuerys {
     }
     return resultSet;
   }
+
 }
