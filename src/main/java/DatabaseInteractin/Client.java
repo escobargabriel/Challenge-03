@@ -7,6 +7,8 @@ import generated.listByIdResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Scanner;
 

@@ -25,7 +25,14 @@ public class ProductService extends productGrpc.productImplBase {
   public void listById(listByIdRequest request, StreamObserver<listByIdResponse> responseObserver) {
     try{
       int id = request.getId();
+      String name = request.getName();
+      int stock = request.getStock();
+      float price = request.getPrice();
       executeQuerys.getById(id);
+      listByIdResponse listByIdResponse = generated.listByIdResponse.newBuilder().
+          setId(id).setName(name).setStock(stock).setPrice(price).build();
+      responseObserver.onNext(listByIdResponse);
+      responseObserver.onCompleted();
     } catch (Exception e) {
       e.printStackTrace();
     }
