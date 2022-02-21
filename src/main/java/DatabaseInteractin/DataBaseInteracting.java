@@ -1,4 +1,5 @@
 package DatabaseInteractin;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,8 +35,8 @@ public class DataBaseInteracting {
     ResultSet resultSet = null;
     try {
       String sql = "select * from products where id =" + id;
-      PreparedStatement  preparedStatement = connection.prepareStatement(sql);
-      resultSet =  preparedStatement.executeQuery();
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+      resultSet = preparedStatement.executeQuery();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -57,6 +58,18 @@ public class DataBaseInteracting {
       listProduct.add(product);
     }
     return listProduct;
+  }
+
+  public ResultSet selectProductsById(int id) throws SQLException {
+    ResultSet resultSet = null;
+    try {
+      String sql = "select * from products where id =" + id;
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+      resultSet = preparedStatement.executeQuery();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return resultSet;
   }
 
 }

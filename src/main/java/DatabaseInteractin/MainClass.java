@@ -1,4 +1,5 @@
 package DatabaseInteractin;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,7 +53,7 @@ public class MainClass {
         stock = sc.nextInt();
         System.out.println("Type the price of the product");
         price = sc.nextFloat();
-        try{
+        try {
           dataBaseInteracting.addProductToDatabase(name, stock, price);
         } catch (SQLException e) {
           e.printStackTrace();
@@ -68,11 +69,11 @@ public class MainClass {
       do {
         System.out.println("Do you want to run the application again? \n1 - Yes - 2 - No");
         response = sc.nextInt();
-        if(response == 2) {
+        if (response == 2) {
           System.out.println("End of execution.\nBye!");
         }
-      }while (response < 1 || response > 2);
-    }while(response == 1);
+      } while (response < 1 || response > 2);
+    } while (response == 1);
     sc.close();
   }
 

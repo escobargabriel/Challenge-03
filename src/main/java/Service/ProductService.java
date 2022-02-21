@@ -1,15 +1,19 @@
 package Service;
+
 import DatabaseInteractin.DataBaseInteracting;
 import DatabaseInteractin.ExecuteQuerys;
 import DatabaseInteractin.Product;
 import generated.addProductRequest;
 import generated.addProductResponse;
+import generated.addShoppingCartRequest;
+import generated.addShoppingCartResponse;
 import generated.listByIdRequest;
 import generated.listByIdResponse;
 import generated.listProductRequest;
 import generated.listProductResponse;
 import generated.productGrpc;
 import io.grpc.stub.StreamObserver;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -70,6 +74,28 @@ public class ProductService extends productGrpc.productImplBase {
         responseObserver.onNext(listProductResponse);
       }
       responseObserver.onCompleted();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void addShoppingCart(addShoppingCartRequest request,
+                              StreamObserver<addShoppingCartResponse> responseObserver) {
+    try {
+      int id = request.getId();
+      ResultSet resultSet = dataBaseInteracting.selectProductsById(id);
+      while (resultSet.next()) {
+        String name = resultSet.getString(2);
+        int stock = resultSet.getInt(3);
+        float price = resultSet.getFloat(4);
+        addShoppingCartResponse
+            addShoppingCartResponse =
+            generated.addShoppingCartResponse.newBuilder().setId(id).setName(name).setStock(stock).setPrice(price)
+                .build();
+        responseObserver.onNext(addShoppingCartResponse);
+        responseObserver.onCompleted();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

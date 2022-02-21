@@ -9,34 +9,53 @@ service product{
   rpc addProduct(addProductRequest) returns (addProductResponse) {};
   rpc listProduct(listProductRequest) returns (stream listProductResponse) {};
   rpc listById(listByIdRequest) returns (listByIdResponse) {};
+  rpc addShoppingCart(addShoppingCartRequest) returns (addShoppingCartResponse){};
 }
-message listProductRequest{
+
+message addShoppingCartRequest {
+  int32 id = 1;
 }
-message listProductResponse{
-  int32    id = 1;
+
+message addShoppingCartResponse {
+  int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
+
+message listProductRequest {
+}
+
+message listProductResponse {
+  int32 id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+
 message showRequest {
 }
+
 message addProductRequest {
-  int32    id = 1;
+  int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
-message addProductResponse{
-  int32    id = 1;
+
+message addProductResponse {
+  int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
-message listByIdRequest{
-  int32    id = 1;
+
+message listByIdRequest {
+  int32 id = 1;
 }
-message listByIdResponse{
-  int32    id = 1;
+
+message listByIdResponse {
+  int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
