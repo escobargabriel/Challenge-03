@@ -1,4 +1,4 @@
-package DatabaseInteractin;
+package DatabaseInteracting;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

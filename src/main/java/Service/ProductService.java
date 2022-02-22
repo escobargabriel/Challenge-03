@@ -1,8 +1,8 @@
 package Service;
 
-import DatabaseInteractin.DataBaseInteracting;
-import DatabaseInteractin.ExecuteQuerys;
-import DatabaseInteractin.Product;
+import DatabaseInteracting.DataBaseInteracting;
+import DatabaseInteracting.ExecuteQuerys;
+import DatabaseInteracting.Product;
 import generated.addProductRequest;
 import generated.addProductResponse;
 import generated.addShoppingCartRequest;

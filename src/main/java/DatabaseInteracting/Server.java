@@ -1,4 +1,4 @@
-package DatabaseInteractin;
+package DatabaseInteracting;
 
 import Service.ProductService;
 import io.grpc.ServerBuilder;
@@ -11,10 +11,12 @@ public class Server {
   public static final Logger logger = Logger.getLogger(Server.class.getName());
 
   public static void main(String[] args) throws IOException, InterruptedException, SQLException {
-    // String user = args[0];
-    // String password = args[1];
+    int port = Integer.parseInt(args[0]);
+    // String url = args[1];
+    // String user = args[2];
+    // String password = args[3];
 
-    io.grpc.Server server = ServerBuilder.forPort(50051).addService(new ProductService()).build();
+    io.grpc.Server server = ServerBuilder.forPort(port).addService(new ProductService()).build();
 
     server.start();
 

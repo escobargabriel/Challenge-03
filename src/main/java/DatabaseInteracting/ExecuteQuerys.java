@@ -1,4 +1,4 @@
-package DatabaseInteractin;
+package DatabaseInteracting;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +14,7 @@ public class ExecuteQuerys {
 
   public List<Product> listReturn() throws SQLException {
     List<Product> list;
-    try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatement();
+    try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatementToProductList();
          ResultSet aResultSet = dataBaseInteracting.createResultSet(preparedStatement);) {
       list = dataBaseInteracting.searchForAll(aResultSet);
     }

@@ -1,4 +1,4 @@
-package DatabaseInteractin;
+package DatabaseInteracting;
 
 import generated.addProductRequest;
 import generated.addProductResponse;

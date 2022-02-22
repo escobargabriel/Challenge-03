@@ -1,4 +1,4 @@
-package DatabaseInteractin;
+package DatabaseInteracting;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +20,7 @@ public class MainClass {
       System.out.println("[4] - Finish execution");
       option = sc.nextInt();
       if (option == 1) {
-        try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatement();
+        try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatementToProductList();
              ResultSet aResultSet = dataBaseInteracting.createResultSet(preparedStatement);) {
           List<Product> list = dataBaseInteracting.searchForAll(aResultSet);
           for (Product product : list) {
@@ -30,7 +30,7 @@ public class MainClass {
       }
       if (option == 2) {
         int id = 0;
-        try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatement();
+        try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatementToProductList();
              ResultSet aResultSet = dataBaseInteracting.createResultSet(preparedStatement);) {
           List<Product> list = dataBaseInteracting.searchForAll(aResultSet);
           System.out.println("Type product id: ");

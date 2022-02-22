@@ -1,4 +1,4 @@
-package DatabaseInteractin;
+package DatabaseInteracting;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +13,7 @@ public class DataBaseInteracting {
   public DataBaseInteracting() throws SQLException {
   }
 
-  public PreparedStatement createPrepareStatement() throws SQLException {
+  public PreparedStatement createPrepareStatementToProductList() throws SQLException {
     String sql = "SELECT * FROM products";
     return connection.prepareStatement(sql);
   }
@@ -33,9 +33,12 @@ public class DataBaseInteracting {
 
   public ResultSet getProductsById(int id) throws SQLException {
     ResultSet resultSet = null;
+    PreparedStatement preparedStatement = null;
     try {
-      String sql = "select * from products where id =" + id;
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+      String sql = "select * from products where id =";
+      preparedStatement.setString(1, sql);
+      preparedStatement.setInt(2, id);
+      preparedStatement = connection.prepareStatement(String.valueOf(preparedStatement));
       resultSet = preparedStatement.executeQuery();
     } catch (SQLException e) {
       e.printStackTrace();

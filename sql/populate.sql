@@ -1,4 +1,3 @@
-
 INSERT INTO products (name,stock,price)
 VALUES
   ('Arroz 5 kg',10, 9.26),
