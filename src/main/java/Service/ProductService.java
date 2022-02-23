@@ -1,7 +1,6 @@
 package Service;
 
 import DatabaseInteracting.DataBaseInteracting;
-import DatabaseInteracting.ExecuteQuerys;
 import DatabaseInteracting.Product;
 import generated.addProductRequest;
 import generated.addProductResponse;
@@ -19,7 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ProductService extends productGrpc.productImplBase {
-  ExecuteQuerys executeQuerys = new ExecuteQuerys();
+
   DataBaseInteracting dataBaseInteracting = new DataBaseInteracting();
 
   public ProductService() throws SQLException {
@@ -50,7 +49,7 @@ public class ProductService extends productGrpc.productImplBase {
       String name = request.getName();
       int stock = request.getStock();
       float price = request.getPrice();
-      executeQuerys.insertIntoDataBase(name, stock, price);
+      dataBaseInteracting.addProductToDatabase(name, stock, price);
       addProductResponse addProductResponse =
           generated.addProductResponse.newBuilder().setName(name).setStock(stock).setPrice(price).build();
       responseObserver.onNext(addProductResponse);
