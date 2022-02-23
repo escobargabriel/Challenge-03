@@ -16,7 +16,7 @@ public class ExecuteQuerys {
     List<Product> list;
     try (PreparedStatement preparedStatement = dataBaseInteracting.createPrepareStatementToProductList();
          ResultSet aResultSet = dataBaseInteracting.createResultSet(preparedStatement);) {
-      list = dataBaseInteracting.searchForAll(aResultSet);
+      list = dataBaseInteracting.searchForAll();
     }
     return list;
   }
