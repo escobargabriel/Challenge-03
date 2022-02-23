@@ -63,7 +63,7 @@ public class ProductService extends productGrpc.productImplBase {
   @Override
   public void listProduct(listProductRequest request, StreamObserver<listProductResponse> responseObserver) {
     try {
-      List<Product> products = executeQuerys.listReturn();
+      List<Product> products = dataBaseInteracting.searchForAll();
       for (Product product : products) {
         int id = product.getId();
         String name = product.getName();

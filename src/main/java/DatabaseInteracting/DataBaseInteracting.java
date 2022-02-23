@@ -50,28 +50,26 @@ public class DataBaseInteracting {
     return preparedStatement.executeQuery();
   }
 
-  public List<Product> searchForAll(ResultSet resultSet) throws SQLException {
-    List<Product> listProduct = new ArrayList<Product>();
-    while (resultSet.next()) {
-      Product product = new Product();
-      product.setId(resultSet.getInt("id"));
-      product.setName(resultSet.getString("name"));
-      product.setStock(resultSet.getInt("stock"));
-      product.setPrice(resultSet.getFloat("price"));
-      listProduct.add(product);
+  public List<Product> searchForAll() throws SQLException {
+    List<Product> list = new ArrayList<>();
+    try (PreparedStatement preparedStatement = createPrepareStatementToProductList();
+         ResultSet aResultSet = createResultSet(preparedStatement);) {
+      while (aResultSet.next()) {
+        Product product = new Product();
+        product.setId(aResultSet.getInt("id"));
+        product.setName(aResultSet.getString("name"));
+        product.setStock(aResultSet.getInt("stock"));
+        product.setPrice(aResultSet.getFloat("price"));
+        list.add(product);
+      }
     }
     return list;
   }
 
   public ResultSet selectProductsById(int id) throws SQLException {
-    ResultSet resultSet = null;
-    try {
-      String sql = "select * from products where id =" + id;
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-      resultSet = preparedStatement.executeQuery();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    String sql = "select * from products where id =" + id;
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    ResultSet resultSet = preparedStatement.executeQuery();
     return resultSet;
   }
 
