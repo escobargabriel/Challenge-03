@@ -71,5 +71,4 @@ public class DataBaseInteracting {
     PreparedStatement preparedStatement = connection.prepareStatement(sql);
     return preparedStatement.executeQuery();
   }
-
 }
