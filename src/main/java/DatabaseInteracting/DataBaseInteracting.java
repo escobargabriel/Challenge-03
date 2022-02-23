@@ -69,8 +69,7 @@ public class DataBaseInteracting {
   public ResultSet selectProductsById(int id) throws SQLException {
     String sql = "select * from products where id =" + id;
     PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    ResultSet resultSet = preparedStatement.executeQuery();
-    return resultSet;
+    return preparedStatement.executeQuery();
   }
 
 }
