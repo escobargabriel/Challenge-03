@@ -18,13 +18,13 @@ public class DataBaseInteracting {
     return connection.prepareStatement(sql);
   }
 
-  public void addProductToDatabase(String n, int s, float p) throws SQLException {
+  public void addProductToDatabase(String name, int stock, float price) throws SQLException {
     try {
       String sql = "INSERT INTO products (name, stock, price) VALUES (?,?,?)";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
-      preparedStatement.setString(1, n);
-      preparedStatement.setInt(2, s);
-      preparedStatement.setFloat(3, p);
+      preparedStatement.setString(1, name);
+      preparedStatement.setInt(2, stock);
+      preparedStatement.setFloat(3, price);
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -60,7 +60,7 @@ public class DataBaseInteracting {
       product.setPrice(resultSet.getFloat("price"));
       listProduct.add(product);
     }
-    return listProduct;
+    return list;
   }
 
   public ResultSet selectProductsById(int id) throws SQLException {
