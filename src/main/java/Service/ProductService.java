@@ -39,7 +39,7 @@ public class ProductService extends productGrpc.productImplBase {
         responseObserver.onCompleted();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      responseObserver.onError(e);
     }
   }
 
@@ -55,7 +55,7 @@ public class ProductService extends productGrpc.productImplBase {
       responseObserver.onNext(addProductResponse);
       responseObserver.onCompleted();
     } catch (Exception e) {
-      e.printStackTrace();
+      responseObserver.onError(e);
     }
   }
 
@@ -74,7 +74,7 @@ public class ProductService extends productGrpc.productImplBase {
       }
       responseObserver.onCompleted();
     } catch (Exception e) {
-      e.printStackTrace();
+      responseObserver.onError(e);
     }
   }
 
@@ -96,7 +96,7 @@ public class ProductService extends productGrpc.productImplBase {
         responseObserver.onCompleted();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      responseObserver.onError(e);
     }
   }
 }
