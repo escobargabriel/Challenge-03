@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseInteracting {
-  private final Connection connection = DataBaseConnection.getConnection();
+  Connection connection;
 
-  public DataBaseInteracting() throws SQLException {
+  public DataBaseInteracting(String url, String user, String password) throws SQLException {
+    DataBaseConnection dataBaseConnection = new DataBaseConnection(url, user, password);
+    connection = dataBaseConnection.getConnection();
   }
 
   public PreparedStatement createPrepareStatementToProductList() throws SQLException {

@@ -12,11 +12,11 @@ public class Server {
 
   public static void main(String[] args) throws IOException, InterruptedException, SQLException {
     int port = Integer.parseInt(args[0]);
-    // String url = args[1];
-    // String user = args[2];
-    // String password = args[3];
+    String url = args[1];
+    String user = args[2];
+    String password = args[3];
 
-    io.grpc.Server server = ServerBuilder.forPort(port).addService(new ProductService()).build();
+    io.grpc.Server server = ServerBuilder.forPort(port).addService(new ProductService(url, user, password)).build();
 
     server.start();
 

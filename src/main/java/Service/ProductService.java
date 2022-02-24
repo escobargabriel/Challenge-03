@@ -18,10 +18,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ProductService extends productGrpc.productImplBase {
+  DataBaseInteracting dataBaseInteracting;
 
-  DataBaseInteracting dataBaseInteracting = new DataBaseInteracting();
 
-  public ProductService() throws SQLException {
+  public ProductService(String url, String user, String password) throws SQLException {
+     dataBaseInteracting = new DataBaseInteracting(url, user, password);
   }
 
   @Override
