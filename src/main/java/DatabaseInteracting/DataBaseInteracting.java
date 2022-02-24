@@ -32,18 +32,9 @@ public class DataBaseInteracting {
   }
 
   public ResultSet getProductsById(int id) throws SQLException {
-    ResultSet resultSet = null;
-    PreparedStatement preparedStatement = null;
-    try {
-      String sql = "select * from products where id =";
-      preparedStatement.setString(1, sql);
-      preparedStatement.setInt(2, id);
-      preparedStatement = connection.prepareStatement(String.valueOf(preparedStatement));
-      resultSet = preparedStatement.executeQuery();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return resultSet;
+    PreparedStatement preparedStatement = connection.prepareStatement("select * from products where id = ?");
+    preparedStatement.setInt(1, id);
+    return preparedStatement.executeQuery();
   }
 
   public ResultSet createResultSet(PreparedStatement preparedStatement) throws SQLException {
@@ -67,8 +58,8 @@ public class DataBaseInteracting {
   }
 
   public ResultSet selectProductsById(int id) throws SQLException {
-    String sql = "select * from products where id =" + id;
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    PreparedStatement preparedStatement = connection.prepareStatement("select * from products where id = ?");
+    preparedStatement.setInt(1, id);
     return preparedStatement.executeQuery();
   }
 }
