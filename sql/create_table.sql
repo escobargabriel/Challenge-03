@@ -5,3 +5,10 @@ CREATE TABLE IF NOT EXISTS products (
   price FLOAT NOT NULL,
   PRIMARY KEY (id)
 );
+CREATE TABLE IF NOT EXISTS shoppingCart(
+    idShoppingCart SERIAL,
+    idProduct INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    primary key (idShoppingCart),
+    foreign key (idProduct) REFERENCES products (id)
+);
