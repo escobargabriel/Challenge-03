@@ -93,9 +93,52 @@ public class DataBaseInteracting {
    * @throws SQLException - Exception of database.
    */
 
-  public ResultSet selectProductsById(int id) throws SQLException {
-    PreparedStatement preparedStatement = connection.prepareStatement("select * from products where id = ?");
-    preparedStatement.setInt(1, id);
-    return preparedStatement.executeQuery();
+ /* public List<Product> searchForAllProductsOnShoppingCart() throws SQLException {
+    List<Product> list = new ArrayList<>();
+    String sql = "SELECT p.id, p.name, p.price FROM products p " +
+        "INNER JOIN shoppingcart s on p.id = s.id";
+    try(PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    ResultSet resultSet = preparedStatement.executeQuery()) {
+      PrepareAndExecuteMethod(resultSet, list);
+    }
+    return list;
+  }*/
+  public ResultSet calculateTotalAmount(int shoppingCartId) throws SQLException {
+    PreparedStatement preparedStatement = connection.prepareStatement(
+        "SELECT p.price * s.quantity  FROM shoppingcart s, products p WHERE s.idProduct = p.id AND s.idShoppingCart = ?");
+          preparedStatement.setInt(1, shoppingCartId);
+          return preparedStatement.executeQuery();
+  }
+
+
+  /**
+  * Method to insert a product into a shopping cart.
+  * @param idProduct int - id of product selected by the client.
+  * @param quantity int - quantity of the product selected by the client.
+  * @throws SQLException - Exception of database.
+  * */
+  public void insertProductIntoAShoppingCartTable(int idProduct, int quantity) throws SQLException {
+    String sql = "INSERT INTO shoppingCart (idProduct, quantity) VALUES (?,?)";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setInt(1, idProduct);
+    preparedStatement.setInt(2, quantity);
+    preparedStatement.executeUpdate();
+    preparedStatement.close();
+  }
+  /**
+  * Method to populate the list using a prepared statement.
+  * @param resultSet ResultSet - resultSet of the query.
+  * @param list List - List with data of the resultSet.
+  * @throws SQLException - Exception of database.
+  */
+  private void PrepareAndExecuteMethod(ResultSet resultSet, List<Product> list) throws SQLException {
+    while (resultSet.next()) {
+      Product product = new Product();
+      product.setId(resultSet.getInt("id"));
+      product.setName(resultSet.getString("name"));
+      product.setStock(resultSet.getInt("stock"));
+      product.setPrice(resultSet.getFloat("price"));
+      list.add(product);
+    }
   }
 }
