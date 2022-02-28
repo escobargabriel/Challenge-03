@@ -80,23 +80,56 @@ public class ProductService extends productGrpc.productImplBase {
   }
 
   @Override
-  public void addShoppingCart(addShoppingCartRequest request,
-                              StreamObserver<addShoppingCartResponse> responseObserver) {
+  public void addProductsToShoppingCart(addProductsToShoppingCartRequest request,
+                                        StreamObserver<addProductsToShoppingCartResponse> responseObserver) {
     try {
-      int id = request.getId();
-      ResultSet resultSet = dataBaseInteracting.selectProductsById(id);
+      int idShoppingCart = request.getIdShoppingCart();
+      int idProduct = request.getIdProduct();
+      int quantity = request.getQuantity();
+      dataBaseInteracting.insertProductIntoAShoppingCartTable(idProduct, quantity);
+      addProductsToShoppingCartResponse addProductsToShoppingCartResponse =
+          generated.addProductsToShoppingCartResponse.newBuilder().setIdShoppingCart(idShoppingCart)
+              .setIdProduct(idProduct).setQuantity(quantity).build();
+      responseObserver.onNext(addProductsToShoppingCartResponse);
+      responseObserver.onCompleted();
+    } catch (Exception e) {
+      responseObserver.onError(e);
+    }
+  }
+
+  /*
+  @Override
+  public void listShoppingCartProducts(listShoppingCartProductsRequest request,
+                                       StreamObserver<listShoppingCartProductsResponse> responseObserver) {
+    try{
+      List<Product> products = dataBaseInteracting.searchForAllProductsOnShoppingCart();
+      for(Product product: products) {
+        int idShoppingCart = product.getId();
+        String idProduct = product.getName();
+        float price = product.getPrice();
+        listShoppingCartProductsResponse listShoppingCartProductsResponse =
+            generated.listShoppingCartProductsResponse.newBuilder().setId(id).setName(name).setPrice(price).build();
+
+      }
+    } catch (SQLException e) {
+      responseObserver.onError(e);
+    }
+  }*/
+
+  @Override
+  public void calculateTotalAmount(calculateTotalAmountRequest request,
+                                   StreamObserver<calculateTotalAmountResponse> responseObserver) {
+    try {
+      int idShoppingCart = request.getIdShoppingCart();
+      ResultSet resultSet = dataBaseInteracting.calculateTotalAmount(idShoppingCart);
       while (resultSet.next()) {
-        String name = resultSet.getString(2);
-        int stock = resultSet.getInt(3);
-        float price = resultSet.getFloat(4);
-        addShoppingCartResponse
-            addShoppingCartResponse =
-            generated.addShoppingCartResponse.newBuilder().setId(id).setName(name).setStock(stock).setPrice(price)
-                .build();
-        responseObserver.onNext(addShoppingCartResponse);
+        float total =  resultSet.getFloat(1);
+        calculateTotalAmountResponse calculateTotalAmountResponse = generated.calculateTotalAmountResponse.newBuilder().
+            setTotalAmount(total).build();
+        responseObserver.onNext(calculateTotalAmountResponse);
         responseObserver.onCompleted();
       }
-    } catch (Exception e) {
+    } catch (SQLException e) {
       responseObserver.onError(e);
     }
   }
