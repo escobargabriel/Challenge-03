@@ -135,8 +135,9 @@ public class DataBaseInteracting {
   public void insertProductIntoAShoppingCartTable(int idCart, int idProduct, int quantity) throws SQLException {
     String sql = "INSERT INTO shoppinglist (idcart, idproduct, quantity) values (?, ?, ?)";
     PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    preparedStatement.setInt(1, idProduct);
-    preparedStatement.setInt(2, quantity);
+    preparedStatement.setInt(1, idCart);
+    preparedStatement.setInt(2, idProduct);
+    preparedStatement.setInt(3, quantity);
     preparedStatement.executeUpdate();
     preparedStatement.close();
   }
