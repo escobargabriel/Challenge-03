@@ -2,17 +2,20 @@ package DatabaseInteracting;
 
 import generated.addProductRequest;
 import generated.addProductResponse;
-import generated.addShoppingCartRequest;
-import generated.addShoppingCartResponse;
+import generated.addProductsToShoppingCartRequest;
+import generated.addProductsToShoppingCartResponse;
+import generated.calculateTotalAmountRequest;
+import generated.calculateTotalAmountResponse;
 import generated.listByIdRequest;
 import generated.listByIdResponse;
 import generated.listProductRequest;
 import generated.listProductResponse;
+import generated.listShoppingCartProductsRequest;
+import generated.listShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Scanner;
 
