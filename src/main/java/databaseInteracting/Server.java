@@ -1,4 +1,4 @@
-package DatabaseInteracting;
+package databaseInteracting;
 
 import Service.ProductService;
 import io.grpc.ServerBuilder;
