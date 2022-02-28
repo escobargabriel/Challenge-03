@@ -93,13 +93,13 @@ public class DataBaseInteracting {
     }
     return list;
   }
+  /*
   /**
    * Method to make a query into the shopping cart table.
    * @return a list of products from shopping cart table.
    * @throws SQLException - Exception of database.
-   */
 
- /* public List<Product> searchForAllProductsOnShoppingCart() throws SQLException {
+  public List<Product> searchForAllProductsOnShoppingCart() throws SQLException {
     List<Product> list = new ArrayList<>();
     String sql = "SELECT p.id, p.name, p.price FROM products p " +
         "INNER JOIN shoppingcart s on p.id = s.id";
