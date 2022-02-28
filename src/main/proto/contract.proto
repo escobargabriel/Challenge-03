@@ -81,10 +81,12 @@ message listByIdResponse {
 }
 
 message listShoppingCartProductsRequest {
+  int32 cartId = 1;
 }
 
 message listShoppingCartProductsResponse {
-  int32 idShoppingCart = 1;
-  int32 idProduct = 2;
-  int32 quantity = 3;
+  int32 idProduct = 1;
+  string name = 2;
+  float price = 3;
+  int32 quantity = 4;
 }
