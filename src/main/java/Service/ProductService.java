@@ -1,13 +1,15 @@
 package Service;
 
-import DatabaseInteracting.DataBaseInteracting;
-import DatabaseInteracting.Product;
+import databaseInteracting.DataBaseInteracting;
+import databaseInteracting.Product;
 import generated.addProductRequest;
 import generated.addProductResponse;
 import generated.addProductsToShoppingCartRequest;
 import generated.addProductsToShoppingCartResponse;
 import generated.calculateTotalAmountRequest;
 import generated.calculateTotalAmountResponse;
+import generated.createAShoppingCartRequest;
+import generated.createAShoppingCartResponse;
 import generated.listProductRequest;
 import generated.listProductResponse;
 import generated.listShoppingCartProductsRequest;
@@ -86,7 +88,7 @@ public class ProductService extends productGrpc.productImplBase {
       int idShoppingCart = request.getIdShoppingCart();
       int idProduct = request.getIdProduct();
       int quantity = request.getQuantity();
-      dataBaseInteracting.insertProductIntoAShoppingCartTable(idProduct, quantity);
+      dataBaseInteracting.insertProductIntoAShoppingCartTable(idShoppingCart, idProduct, quantity);
       addProductsToShoppingCartResponse addProductsToShoppingCartResponse =
           generated.addProductsToShoppingCartResponse.newBuilder().setIdShoppingCart(idShoppingCart)
               .setIdProduct(idProduct).setQuantity(quantity).build();
