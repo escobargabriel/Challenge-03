@@ -7,8 +7,16 @@ CREATE TABLE IF NOT EXISTS products (
 );
 CREATE TABLE IF NOT EXISTS shoppingCart(
     idShoppingCart SERIAL,
-    idProduct INTEGER NOT NULL,
-    quantity INTEGER NOT NULL,
-    primary key (idShoppingCart),
-    foreign key (idProduct) REFERENCES products (id)
+    clientName varchar(255) NOT NULL,
+    primary key (idShoppingCart)
 );
+CREATE TABLE IF NOT EXISTS shoppingList(
+  idShopping SERIAL,
+  IdCart INTEGER NOT NULL,
+  idProduct INTEGER NOT NULL,
+  quantity INTEGER NOT NULL,
+  primary key (idShopping),
+  foreign key (idProduct) REFERENCES products (id),
+  foreign key (idCart) REFERENCES shoppingcart(idShoppingCart)
+);
+
