@@ -9,10 +9,16 @@ public class DataBaseConnection {
   private static String user;
   private static String password;
 
-  public DataBaseConnection(String url, String user, String password){
-    this.url = url;
-    this.password = password;
-    this.user = user;
+  /**
+   * Method constructor of the class to receive the parameters of database connection.
+   * @param url String - URL of database.
+   * @param user String - User name of database.
+   * @param password String - Password of database.
+   */
+  public DataBaseConnection(String url, String user, String password) {
+    DataBaseConnection.url = url;
+    DataBaseConnection.password = password;
+    DataBaseConnection.user = user;
   }
 
   public Connection getConnection() throws SQLException {
