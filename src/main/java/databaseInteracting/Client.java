@@ -83,7 +83,7 @@ public class Client {
         addProductResponse response = prodStub.addProduct(request);
         System.out.println(response.getName());
       }
-      if(option == 4) {
+      if (option == 4) {
         sc.nextLine();
         System.out.println("Type the client name");
         String name = sc.nextLine();
@@ -91,8 +91,6 @@ public class Client {
             generated.createAShoppingCartRequest.newBuilder().setName(name).build();
         createAShoppingCartResponse response = prodStub.createAShoppingCart(createAShoppingCartRequest);
         System.out.println("Cart id: " + response.getId() + "Owner Name: " + response.getName());
-
-
       }
 
       if (option == 5) {
@@ -110,28 +108,29 @@ public class Client {
             + response.getIdProduct() + " Quantity: " + response.getQuantity());
       }
       if (option == 6) {
-        System.out.println("under construction");
-        /* try {
+        System.out.println("Type your Shopping Cart ID: ");
+        int id = sc.nextInt();
+        System.out.println("Your Shopping Cart has the products below:");
+         try {
           listShoppingCartProductsRequest request =
-              listShoppingCartProductsRequest.newBuilder().build();
+              listShoppingCartProductsRequest.newBuilder().setCartId(id).build();
           Iterator<listShoppingCartProductsResponse> listShoppingCartProductsResponseIterator =
               prodStub.listShoppingCartProducts(request);
           while (listShoppingCartProductsResponseIterator.hasNext()) {
             listShoppingCartProductsResponse next = listShoppingCartProductsResponseIterator.next();
-            System.out.printf("Shopping Cart Id: %d Product Id: %d Quantity: %d \n",
-                next.getIdShoppingCart(), next.getIdProduct(), next.getQuantity());
+            System.out.printf("Product Id: %d Product Name: %s  Price: %.2f Quantity: %d \n",
+                next.getIdProduct(), next.getName(), next.getPrice(), next.getQuantity());
             }
           } catch (Exception e) {
           e.printStackTrace();
           }
-        */
       }
       if (option == 7) {
         System.out.println("Type the id of Shopping Cart that you desire to calculate the amount");
         int shoppingCartId = sc.nextInt();
         calculateTotalAmountRequest calculateTotalAmountRequest =
-            generated.calculateTotalAmountRequest.newBuilder().
-                setIdShoppingCart(shoppingCartId).build();
+            generated.calculateTotalAmountRequest.newBuilder()
+                .setIdShoppingCart(shoppingCartId).build();
         calculateTotalAmountResponse calculateTotalAmountResponse =
             prodStub.calculateTotalAmount(calculateTotalAmountRequest);
         float total = calculateTotalAmountResponse.getTotalAmount();
