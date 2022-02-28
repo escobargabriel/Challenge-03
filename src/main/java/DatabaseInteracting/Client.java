@@ -20,8 +20,17 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class Client {
-  public static void main(String[] args) throws SQLException {
-    ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051).usePlaintext().build();
+  /**
+   * Main Method of class.
+   * Class with a menu to interact with the database and the server side.
+   *
+   * @param args Array of String to pass parameters.
+   */
+  public static void main(String[] args) {
+    String channelName = args[0];
+    int portNumber = Integer.parseInt(args[1]);
+    ManagedChannel channel = ManagedChannelBuilder
+        .forAddress(channelName, portNumber).usePlaintext().build();
     productGrpc.productBlockingStub prodStub = productGrpc.newBlockingStub(channel);
     Scanner sc = new Scanner(System.in);
     int option;
