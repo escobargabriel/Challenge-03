@@ -18,7 +18,8 @@ public class DataBaseInteracting {
    * @throws SQLException - Exception of database
    */
   public DataBaseInteracting(String url, String user, String password) throws SQLException {
-    DataBaseConnection dataBaseConnection = new DataBaseConnection(url, user, password);
+    DataBaseConnection dataBaseConnection =
+        new DatabaseInteracting.DataBaseConnection(url, user, password);
     connection = dataBaseConnection.getConnection();
   }
 
@@ -40,16 +41,13 @@ public class DataBaseInteracting {
    * @throws SQLException - Exception of database.
    */
   public void addProductToDatabase(String name, int stock, float price) throws SQLException {
-    try {
-      String sql = "INSERT INTO products (name, stock, price) VALUES (?,?,?)";
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-      preparedStatement.setString(1, name);
-      preparedStatement.setInt(2, stock);
-      preparedStatement.setFloat(3, price);
-      preparedStatement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    String sql = "INSERT INTO products (name, stock, price) VALUES (?,?,?)";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setString(1, name);
+    preparedStatement.setInt(2, stock);
+    preparedStatement.setFloat(3, price);
+    preparedStatement.executeUpdate();
+    preparedStatement.close();
   }
 
   /**
@@ -59,7 +57,8 @@ public class DataBaseInteracting {
    * @throws SQLException - Exception of database.
    */
   public ResultSet getProductsById(int id) throws SQLException {
-    PreparedStatement preparedStatement = connection.prepareStatement("select * from products where id = ?");
+    PreparedStatement preparedStatement =
+        connection.prepareStatement("select * from products where id = ?");
     preparedStatement.setInt(1, id);
     return preparedStatement.executeQuery();
   }
@@ -83,15 +82,8 @@ public class DataBaseInteracting {
   public List<DatabaseInteracting.Product> searchForAllProductsOnDatabase() throws SQLException {
     List<DatabaseInteracting.Product> list = new ArrayList<>();
     try (PreparedStatement preparedStatement = createPrepareStatementToProductList();
-         ResultSet aResultSet = createResultSet(preparedStatement);) {
-      while (aResultSet.next()) {
-        Product product = new Product();
-        product.setId(aResultSet.getInt("id"));
-        product.setName(aResultSet.getString("name"));
-        product.setStock(aResultSet.getInt("stock"));
-        product.setPrice(aResultSet.getFloat("price"));
-        list.add(product);
-      }
+         ResultSet aResultSet = createResultSet(preparedStatement)) {
+      PrepareAndExecuteMethod(aResultSet, list);
     }
     return list;
   }
