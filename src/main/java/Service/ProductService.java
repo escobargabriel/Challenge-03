@@ -99,24 +99,28 @@ public class ProductService extends productGrpc.productImplBase {
     }
   }
 
-  /*
   @Override
   public void listShoppingCartProducts(listShoppingCartProductsRequest request,
                                        StreamObserver<listShoppingCartProductsResponse> responseObserver) {
     try{
-      List<Product> products = dataBaseInteracting.searchForAllProductsOnShoppingCart();
-      for(Product product: products) {
-        int idShoppingCart = product.getId();
-        String idProduct = product.getName();
-        float price = product.getPrice();
+      int cartId = request.getCartId();
+      ResultSet resultSet = dataBaseInteracting.searchForAllProductsOnShoppingCart(cartId);
+      while (resultSet.next()) {
+        int idProduct = resultSet.getInt(1);
+        String name = resultSet.getString(2);
+        float price = resultSet.getFloat(3);
+        int quantity = resultSet.getInt(4);
         listShoppingCartProductsResponse listShoppingCartProductsResponse =
-            generated.listShoppingCartProductsResponse.newBuilder().setId(id).setName(name).setPrice(price).build();
-
+            generated.listShoppingCartProductsResponse.newBuilder().setIdProduct(idProduct)
+                .setName(name).setPrice(price).setQuantity(quantity).build();
+        System.out.println(listShoppingCartProductsResponse.getName());
+        responseObserver.onNext(listShoppingCartProductsResponse);
       }
+      responseObserver.onCompleted();
     } catch (SQLException e) {
       responseObserver.onError(e);
     }
-  }*/
+  }
 
   @Override
   public void calculateTotalAmount(calculateTotalAmountRequest request,

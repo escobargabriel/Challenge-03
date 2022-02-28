@@ -98,17 +98,14 @@ public class DataBaseInteracting {
    * Method to make a query into the shopping cart table.
    * @return a list of products from shopping cart table.
    * @throws SQLException - Exception of database.
-
-  public List<Product> searchForAllProductsOnShoppingCart() throws SQLException {
-    List<Product> list = new ArrayList<>();
-    String sql = "SELECT p.id, p.name, p.price FROM products p " +
-        "INNER JOIN shoppingcart s on p.id = s.id";
-    try(PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    ResultSet resultSet = preparedStatement.executeQuery()) {
-      PrepareAndExecuteMethod(resultSet, list);
-    }
-    return list;
-  }*/
+  */
+  public ResultSet searchForAllProductsOnShoppingCart(int cartId) throws SQLException {
+    String sql = "SELECT p.id, p.name, p.price, l.quantity FROM products p," +
+        " shoppinglist l, shoppingcart c where p.id = l.idproduct AND l.idcart = ?;";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+      preparedStatement.setInt(1,cartId);
+      return preparedStatement.executeQuery();
+  }
 
   /**
    * Method to calculate the total amount of the sale.
