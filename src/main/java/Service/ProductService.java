@@ -124,8 +124,8 @@ public class ProductService extends productGrpc.productImplBase {
       ResultSet resultSet = dataBaseInteracting.calculateTotalAmount(idShoppingCart);
       while (resultSet.next()) {
         float total =  resultSet.getFloat(1);
-        calculateTotalAmountResponse calculateTotalAmountResponse = generated.calculateTotalAmountResponse.newBuilder().
-            setTotalAmount(total).build();
+        calculateTotalAmountResponse calculateTotalAmountResponse = generated.calculateTotalAmountResponse.newBuilder()
+                .setTotalAmount(total).build();
         responseObserver.onNext(calculateTotalAmountResponse);
         responseObserver.onCompleted();
       }

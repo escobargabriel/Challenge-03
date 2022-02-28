@@ -105,9 +105,10 @@ public class DataBaseInteracting {
   }*/
   public ResultSet calculateTotalAmount(int shoppingCartId) throws SQLException {
     PreparedStatement preparedStatement = connection.prepareStatement(
-        "SELECT p.price * s.quantity  FROM shoppingcart s, products p WHERE s.idProduct = p.id AND s.idShoppingCart = ?");
-          preparedStatement.setInt(1, shoppingCartId);
-          return preparedStatement.executeQuery();
+        "SELECT SUM (p.price * l.quantity) AS totalSum FROM  products p," +
+            " shoppinglist l, shoppingcart c WHERE l.idProduct = p.id AND c.idShoppingCart = ?;");
+    preparedStatement.setInt(1, shoppingCartId);
+    return preparedStatement.executeQuery();
   }
 
 

@@ -103,11 +103,11 @@ public class Client {
         System.out.println("Type the quantity of this product:");
         int quantity = sc.nextInt();
         addProductsToShoppingCartRequest request =
-            addProductsToShoppingCartRequest.newBuilder().setIdProduct(idProduct)
+            addProductsToShoppingCartRequest.newBuilder().setIdShoppingCart(idCart).setIdProduct(idProduct)
                 .setQuantity(quantity).build();
         addProductsToShoppingCartResponse response = prodStub.addProductsToShoppingCart(request);
-        System.out.println("Shopping Cart Id: " + response.getIdShoppingCart() + "Product ID: "
-            + response.getIdProduct() + "Quantity" + response.getQuantity());
+        System.out.println("Shopping Cart Id: " + response.getIdShoppingCart() + " Product ID: "
+            + response.getIdProduct() + " Quantity: " + response.getQuantity());
       }
       if (option == 5) {
         System.out.println("under construction");
@@ -126,7 +126,7 @@ public class Client {
           }
         */
       }
-      if (option == 6) {
+      if (option == 7) {
         System.out.println("Type the id of Shopping Cart that you desire to calculate the amount");
         int shoppingCartId = sc.nextInt();
         calculateTotalAmountRequest calculateTotalAmountRequest =
