@@ -125,6 +125,15 @@ public class DataBaseInteracting {
     preparedStatement.executeUpdate();
     preparedStatement.close();
   }
+
+  public void createAShoppingCart(String name) throws SQLException {
+    String sql = "INSERT INTO shoppingCart(clientName) values(?)";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setString(1, name);
+    preparedStatement.executeUpdate();
+    preparedStatement.close();
+  }
+
   /**
   * Method to populate the list using a prepared statement.
   * @param resultSet ResultSet - resultSet of the query.

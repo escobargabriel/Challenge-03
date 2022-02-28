@@ -133,4 +133,20 @@ public class ProductService extends productGrpc.productImplBase {
       responseObserver.onError(e);
     }
   }
+
+  @Override
+  public void createAShoppingCart(createAShoppingCartRequest request,
+                                  StreamObserver<createAShoppingCartResponse> responseObserver) {
+    try{
+      String name = request.getName();
+      dataBaseInteracting.createAShoppingCart(name);
+      createAShoppingCartResponse createAShoppingCartResponse =
+          generated.createAShoppingCartResponse.newBuilder().setName(name).build();
+      responseObserver.onNext(createAShoppingCartResponse);
+      responseObserver.onCompleted();
+    } catch (SQLException e) {
+      responseObserver.onError(e);
+    }
+
+  }
 }

@@ -9,10 +9,21 @@ service product {
   rpc addProduct(addProductRequest) returns (addProductResponse) {};
   rpc listProduct(listProductRequest) returns (stream listProductResponse) {};
   rpc listById(listByIdRequest) returns (listByIdResponse) {};
+  rpc createAShoppingCart(createAShoppingCartRequest) returns (createAShoppingCartResponse) {};
   rpc addProductsToShoppingCart(addProductsToShoppingCartRequest) returns (addProductsToShoppingCartResponse){};
   rpc listShoppingCartProducts(listShoppingCartProductsRequest) returns (stream listShoppingCartProductsResponse) {};
   rpc calculateTotalAmount(calculateTotalAmountRequest)  returns (calculateTotalAmountResponse){};
 }
+
+message createAShoppingCartRequest {
+  string name = 1;
+}
+
+message createAShoppingCartResponse {
+  string name = 1;
+  int32 id = 2;
+}
+
 message calculateTotalAmountRequest {
   int32 idShoppingCart = 1;
 }

@@ -1,4 +1,4 @@
-package DatabaseInteracting;
+package databaseInteracting;
 
 import generated.addProductRequest;
 import generated.addProductResponse;
@@ -6,6 +6,8 @@ import generated.addProductsToShoppingCartRequest;
 import generated.addProductsToShoppingCartResponse;
 import generated.calculateTotalAmountRequest;
 import generated.calculateTotalAmountResponse;
+import generated.createAShoppingCartRequest;
+import generated.createAShoppingCartResponse;
 import generated.listByIdRequest;
 import generated.listByIdResponse;
 import generated.listProductRequest;
@@ -40,10 +42,13 @@ public class Client {
       System.out.println("[1] - List all products");
       System.out.println("[2] - Search a product");
       System.out.println("[3] - Add a product");
-      System.out.println("[4] - Add a Shopping Cart");
-      System.out.println("[5] - Show the Shopping Cart");
-      System.out.println("[6] - Calculate the total purchase amount.");
-      System.out.println("[7] - Finish execution");
+      System.out.println("[4] - Create a Shopping Cart");
+      System.out.println("[5] - Add a product to Shopping Cart");
+      System.out.println("[6] - Show the Shopping Cart");
+      System.out.println("[7] - Calculate the total purchase amount.");
+      System.out.println("[8] - Import products from a file.");
+      System.out.println("[9] - Export products to a file.");
+      System.out.println("[10] - Finish execution");
       option = sc.nextInt();
       if (option == 1) {
         try {
@@ -78,7 +83,21 @@ public class Client {
         addProductResponse response = prodStub.addProduct(request);
         System.out.println(response.getName());
       }
-      if (option == 4) {
+      if(option == 4) {
+        sc.nextLine();
+        System.out.println("Type the client name");
+        String name = sc.nextLine();
+        createAShoppingCartRequest createAShoppingCartRequest =
+            generated.createAShoppingCartRequest.newBuilder().setName(name).build();
+        createAShoppingCartResponse response = prodStub.createAShoppingCart(createAShoppingCartRequest);
+        System.out.println("Cart id: " + response.getId() + "Owner Name: " + response.getName());
+
+
+      }
+
+      if (option == 5) {
+        System.out.println("Type the id of shopping cart");
+        int idCart = sc.nextInt();
         System.out.println("Type the id of desired product:");
         int idProduct = sc.nextInt();
         System.out.println("Type the quantity of this product:");
