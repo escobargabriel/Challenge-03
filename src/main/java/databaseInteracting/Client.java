@@ -109,7 +109,7 @@ public class Client {
         System.out.println("Shopping Cart Id: " + response.getIdShoppingCart() + " Product ID: "
             + response.getIdProduct() + " Quantity: " + response.getQuantity());
       }
-      if (option == 5) {
+      if (option == 6) {
         System.out.println("under construction");
         /* try {
           listShoppingCartProductsRequest request =
@@ -137,10 +137,18 @@ public class Client {
         float total = calculateTotalAmountResponse.getTotalAmount();
         System.out.println("Total Amount of sale: R$" + total);
       }
-      if (option == 7) {
+      if (option == 8) {
+        System.out.println("Importing products from a file");
+        System.out.println("Under construction");
+      }
+      if (option == 9) {
+        System.out.println("Exporting of execution to a file");
+        System.out.println("Under construction");
+      }
+      if (option == 10) {
         System.out.println("End of execution");
       }
-      if (option < 1 || option > 7) {
+      if (option < 1 || option > 10) {
         System.out.println("Invalid option!");
       }
       do {
