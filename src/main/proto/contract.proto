@@ -5,22 +5,30 @@ option java_multiple_files = true;
 option java_package = "generated";
 option java_outer_classname = "ProductsProtos";
 
-service product{
+service product {
   rpc addProduct(addProductRequest) returns (addProductResponse) {};
   rpc listProduct(listProductRequest) returns (stream listProductResponse) {};
   rpc listById(listByIdRequest) returns (listByIdResponse) {};
-  rpc addShoppingCart(addShoppingCartRequest) returns (addShoppingCartResponse){};
+  rpc addProductsToShoppingCart(addProductsToShoppingCartRequest) returns (addProductsToShoppingCartResponse){};
+  rpc listShoppingCartProducts(listShoppingCartProductsRequest) returns (stream listShoppingCartProductsResponse) {};
+  rpc calculateTotalAmount(calculateTotalAmountRequest)  returns (calculateTotalAmountResponse){};
+}
+message calculateTotalAmountRequest {
+  int32 idShoppingCart = 1;
+}
+message calculateTotalAmountResponse {
+  float totalAmount = 1;
+}
+message addProductsToShoppingCartRequest {
+  int32 idShoppingCart = 1;
+  int32 idProduct = 2;
+  int32 quantity = 3;
 }
 
-message addShoppingCartRequest {
-  int32 id = 1;
-}
-
-message addShoppingCartResponse {
-  int32 id = 1;
-  string name = 2;
-  int32 stock = 3;
-  float price = 4;
+message addProductsToShoppingCartResponse {
+  int32 idShoppingCart = 1;
+  int32 idProduct = 2;
+  int32 quantity = 3;
 }
 
 message listProductRequest {
@@ -59,4 +67,13 @@ message listByIdResponse {
   string name = 2;
   int32 stock = 3;
   float price = 4;
+}
+
+message listShoppingCartProductsRequest {
+}
+
+message listShoppingCartProductsResponse {
+  int32 idShoppingCart = 1;
+  int32 idProduct = 2;
+  int32 quantity = 3;
 }
