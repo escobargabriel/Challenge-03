@@ -34,7 +34,7 @@ public class Client {
     ManagedChannel channel = ManagedChannelBuilder
         .forAddress(channelName, portNumber).usePlaintext().build();
     productGrpc.productBlockingStub prodStub = productGrpc.newBlockingStub(channel);
-    Scanner sc = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
     int option;
     int aux;
     do {
@@ -49,7 +49,7 @@ public class Client {
       System.out.println("[8] - Import products from a file.");
       System.out.println("[9] - Export products to a file.");
       System.out.println("[10] - Finish execution");
-      option = sc.nextInt();
+      option = scanner.nextInt();
       if (option == 1) {
         try {
           ListProductRequest request = ListProductRequest.newBuilder().build();
@@ -65,28 +65,28 @@ public class Client {
       }
       if (option == 2) {
         System.out.println("Type product id: ");
-        int id = sc.nextInt();
+        int id = scanner.nextInt();
         ListByIdRequest request = ListByIdRequest.newBuilder().setId(id).build();
         ListByIdResponse response = prodStub.listById(request);
         System.out.println(response);
       }
       if (option == 3) {
-        sc.nextLine();
+        scanner.nextLine();
         System.out.println("Type the product name");
-        String name = sc.nextLine();
+        String name = scanner.nextLine();
         System.out.println("Type the number of product inserted on stock");
-        int stock = sc.nextInt();
+        int stock = scanner.nextInt();
         System.out.println("Type the price of the product");
-        float price = sc.nextFloat();
+        float price = scanner.nextFloat();
         AddProductRequest request =
             AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
         AddProductResponse response = prodStub.addProduct(request);
         System.out.println(response.getName());
       }
       if (option == 4) {
-        sc.nextLine();
+        scanner.nextLine();
         System.out.println("Type the client name");
-        String name = sc.nextLine();
+        String name = scanner.nextLine();
         CreateAShoppingCartRequest createAShoppingCartRequest =
             generated.CreateAShoppingCartRequest.newBuilder().setName(name).build();
         CreateAShoppingCartResponse response = prodStub.createAShoppingCart(createAShoppingCartRequest);
@@ -95,11 +95,11 @@ public class Client {
 
       if (option == 5) {
         System.out.println("Type the id of shopping cart");
-        int idCart = sc.nextInt();
+        int idCart = scanner.nextInt();
         System.out.println("Type the id of desired product:");
-        int idProduct = sc.nextInt();
+        int idProduct = scanner.nextInt();
         System.out.println("Type the quantity of this product:");
-        int quantity = sc.nextInt();
+        int quantity = scanner.nextInt();
         AddProductsToShoppingCartRequest request =
             AddProductsToShoppingCartRequest.newBuilder().setIdShoppingCart(idCart).setIdProduct(idProduct)
                 .setQuantity(quantity).build();
@@ -109,7 +109,7 @@ public class Client {
       }
       if (option == 6) {
         System.out.println("Type your Shopping Cart ID: ");
-        int id = sc.nextInt();
+        int id = scanner.nextInt();
         System.out.println("Your Shopping Cart has the products below:");
          try {
           ListShoppingCartProductsRequest request =
@@ -127,7 +127,7 @@ public class Client {
       }
       if (option == 7) {
         System.out.println("Type the id of Shopping Cart that you desire to calculate the amount");
-        int shoppingCartId = sc.nextInt();
+        int shoppingCartId = scanner.nextInt();
         CalculateTotalAmountRequest calculateTotalAmountRequest =
             generated.CalculateTotalAmountRequest.newBuilder()
                 .setIdShoppingCart(shoppingCartId).build();
@@ -152,12 +152,12 @@ public class Client {
       }
       do {
         System.out.println("Do you want to run the application again? \n1 - Yes - 2 - No");
-        aux = sc.nextInt();
+        aux = scanner.nextInt();
         if (aux == 2) {
           System.out.println("End of execution.\nBye!");
         }
       } while (aux < 1 || aux > 2);
     } while (aux == 1);
-    sc.close();
+    scanner.close();
   }
 }
