@@ -44,6 +44,7 @@ public class ProductService extends productGrpc.productImplBase {
         responseObserver.onNext(listByIdResponse);
         responseObserver.onCompleted();
       }
+      resultSet.close();
     } catch (Exception e) {
       responseObserver.onError(e);
     }
@@ -120,6 +121,7 @@ public class ProductService extends productGrpc.productImplBase {
         responseObserver.onNext(listShoppingCartProductsResponse);
       }
       responseObserver.onCompleted();
+      resultSet.close();
     } catch (SQLException e) {
       responseObserver.onError(e);
     }
@@ -138,6 +140,7 @@ public class ProductService extends productGrpc.productImplBase {
         responseObserver.onNext(calculateTotalAmountResponse);
         responseObserver.onCompleted();
       }
+      resultSet.close();
     } catch (SQLException e) {
       responseObserver.onError(e);
     }
