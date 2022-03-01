@@ -45,12 +45,12 @@ public class DataBaseInteracting {
    */
   public void addProductToDatabase(String name, int stock, float price) throws SQLException {
     String sql = "INSERT INTO products (name, stock, price) VALUES (?,?,?)";
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    preparedStatement.setString(1, name);
-    preparedStatement.setInt(2, stock);
-    preparedStatement.setFloat(3, price);
-    preparedStatement.executeUpdate();
-    preparedStatement.close();
+    try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+      preparedStatement.setString(1, name);
+      preparedStatement.setInt(2, stock);
+      preparedStatement.setFloat(3, price);
+      preparedStatement.executeUpdate();
+    }
   }
 
   /**
@@ -146,10 +146,10 @@ public class DataBaseInteracting {
    */
   public void createAShoppingCart(String name) throws SQLException {
     String sql = "INSERT INTO shoppingCart(clientName) values(?)";
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    preparedStatement.setString(1, name);
-    preparedStatement.executeUpdate();
-    preparedStatement.close();
+    try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+      preparedStatement.setString(1, name);
+      preparedStatement.executeUpdate();
+    }
   }
 
   /**
