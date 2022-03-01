@@ -6,85 +6,85 @@ option java_package = "generated";
 option java_outer_classname = "ProductsProtos";
 
 service product {
-  rpc addProduct(addProductRequest) returns (addProductResponse) {};
-  rpc listProduct(listProductRequest) returns (stream listProductResponse) {};
-  rpc listById(listByIdRequest) returns (listByIdResponse) {};
-  rpc createAShoppingCart(createAShoppingCartRequest) returns (createAShoppingCartResponse) {};
-  rpc addProductsToShoppingCart(addProductsToShoppingCartRequest) returns (addProductsToShoppingCartResponse){};
-  rpc listShoppingCartProducts(listShoppingCartProductsRequest) returns (stream listShoppingCartProductsResponse) {};
-  rpc calculateTotalAmount(calculateTotalAmountRequest)  returns (calculateTotalAmountResponse){};
+  rpc AddProduct(AddProductRequest) returns (AddProductResponse) {};
+  rpc ListProduct(ListProductRequest) returns (stream ListProductResponse) {};
+  rpc ListById(ListByIdRequest) returns (ListByIdResponse) {};
+  rpc CreateAShoppingCart(CreateAShoppingCartRequest) returns (CreateAShoppingCartResponse) {};
+  rpc AddProductsToShoppingCart(AddProductsToShoppingCartRequest) returns (AddProductsToShoppingCartResponse){};
+  rpc ListShoppingCartProducts(ListShoppingCartProductsRequest) returns (stream ListShoppingCartProductsResponse) {};
+  rpc CalculateTotalAmount(CalculateTotalAmountRequest)  returns (CalculateTotalAmountResponse){};
 }
 
-message createAShoppingCartRequest {
+message CreateAShoppingCartRequest {
   string name = 1;
 }
 
-message createAShoppingCartResponse {
+message CreateAShoppingCartResponse {
   string name = 1;
   int32 id = 2;
 }
 
-message calculateTotalAmountRequest {
+message CalculateTotalAmountRequest {
   int32 idShoppingCart = 1;
 }
-message calculateTotalAmountResponse {
+message CalculateTotalAmountResponse {
   float totalAmount = 1;
 }
-message addProductsToShoppingCartRequest {
+message AddProductsToShoppingCartRequest {
   int32 idShoppingCart = 1;
   int32 idProduct = 2;
   int32 quantity = 3;
 }
 
-message addProductsToShoppingCartResponse {
+message AddProductsToShoppingCartResponse {
   int32 idShoppingCart = 1;
   int32 idProduct = 2;
   int32 quantity = 3;
 }
 
-message listProductRequest {
+message ListProductRequest {
 }
 
-message listProductResponse {
+message ListProductResponse {
   int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
 
-message showRequest {
+message ShowRequest {
 }
 
-message addProductRequest {
+message AddProductRequest {
   int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
 
-message addProductResponse {
+message AddProductResponse {
   int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
 
-message listByIdRequest {
+message ListByIdRequest {
   int32 id = 1;
 }
 
-message listByIdResponse {
+message ListByIdResponse {
   int32 id = 1;
   string name = 2;
   int32 stock = 3;
   float price = 4;
 }
 
-message listShoppingCartProductsRequest {
+message ListShoppingCartProductsRequest {
   int32 cartId = 1;
 }
 
-message listShoppingCartProductsResponse {
+message ListShoppingCartProductsResponse {
   int32 idProduct = 1;
   string name = 2;
   float price = 3;

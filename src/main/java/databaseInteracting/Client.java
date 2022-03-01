@@ -1,19 +1,19 @@
 package databaseInteracting;
 
-import generated.addProductRequest;
-import generated.addProductResponse;
-import generated.addProductsToShoppingCartRequest;
-import generated.addProductsToShoppingCartResponse;
-import generated.calculateTotalAmountRequest;
-import generated.calculateTotalAmountResponse;
-import generated.createAShoppingCartRequest;
-import generated.createAShoppingCartResponse;
-import generated.listByIdRequest;
-import generated.listByIdResponse;
-import generated.listProductRequest;
-import generated.listProductResponse;
-import generated.listShoppingCartProductsRequest;
-import generated.listShoppingCartProductsResponse;
+import generated.AddProductRequest;
+import generated.AddProductResponse;
+import generated.AddProductsToShoppingCartRequest;
+import generated.AddProductsToShoppingCartResponse;
+import generated.CalculateTotalAmountRequest;
+import generated.CalculateTotalAmountResponse;
+import generated.CreateAShoppingCartRequest;
+import generated.CreateAShoppingCartResponse;
+import generated.ListByIdRequest;
+import generated.ListByIdResponse;
+import generated.ListProductRequest;
+import generated.ListProductResponse;
+import generated.ListShoppingCartProductsRequest;
+import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -52,10 +52,10 @@ public class Client {
       option = sc.nextInt();
       if (option == 1) {
         try {
-          listProductRequest request = listProductRequest.newBuilder().build();
-          Iterator<listProductResponse> listProductResponseIterator = prodStub.listProduct(request);
+          ListProductRequest request = ListProductRequest.newBuilder().build();
+          Iterator<ListProductResponse> listProductResponseIterator = prodStub.listProduct(request);
           while (listProductResponseIterator.hasNext()) {
-            listProductResponse next = listProductResponseIterator.next();
+            ListProductResponse next = listProductResponseIterator.next();
             System.out.printf("Id: %d Name: %s Stock: %d Price: %.2f\n",
                 next.getId(), next.getName(), next.getStock(), next.getPrice());
           }
@@ -66,8 +66,8 @@ public class Client {
       if (option == 2) {
         System.out.println("Type product id: ");
         int id = sc.nextInt();
-        listByIdRequest request = listByIdRequest.newBuilder().setId(id).build();
-        listByIdResponse response = prodStub.listById(request);
+        ListByIdRequest request = ListByIdRequest.newBuilder().setId(id).build();
+        ListByIdResponse response = prodStub.listById(request);
         System.out.println(response);
       }
       if (option == 3) {
@@ -78,18 +78,18 @@ public class Client {
         int stock = sc.nextInt();
         System.out.println("Type the price of the product");
         float price = sc.nextFloat();
-        addProductRequest request =
-            addProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
-        addProductResponse response = prodStub.addProduct(request);
+        AddProductRequest request =
+            AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
+        AddProductResponse response = prodStub.addProduct(request);
         System.out.println(response.getName());
       }
       if (option == 4) {
         sc.nextLine();
         System.out.println("Type the client name");
         String name = sc.nextLine();
-        createAShoppingCartRequest createAShoppingCartRequest =
-            generated.createAShoppingCartRequest.newBuilder().setName(name).build();
-        createAShoppingCartResponse response = prodStub.createAShoppingCart(createAShoppingCartRequest);
+        CreateAShoppingCartRequest createAShoppingCartRequest =
+            generated.CreateAShoppingCartRequest.newBuilder().setName(name).build();
+        CreateAShoppingCartResponse response = prodStub.createAShoppingCart(createAShoppingCartRequest);
         System.out.println("Cart id: " + response.getId() + "Owner Name: " + response.getName());
       }
 
@@ -100,10 +100,10 @@ public class Client {
         int idProduct = sc.nextInt();
         System.out.println("Type the quantity of this product:");
         int quantity = sc.nextInt();
-        addProductsToShoppingCartRequest request =
-            addProductsToShoppingCartRequest.newBuilder().setIdShoppingCart(idCart).setIdProduct(idProduct)
+        AddProductsToShoppingCartRequest request =
+            AddProductsToShoppingCartRequest.newBuilder().setIdShoppingCart(idCart).setIdProduct(idProduct)
                 .setQuantity(quantity).build();
-        addProductsToShoppingCartResponse response = prodStub.addProductsToShoppingCart(request);
+        AddProductsToShoppingCartResponse response = prodStub.addProductsToShoppingCart(request);
         System.out.println("Shopping Cart Id: " + response.getIdShoppingCart() + " Product ID: "
             + response.getIdProduct() + " Quantity: " + response.getQuantity());
       }
@@ -112,12 +112,12 @@ public class Client {
         int id = sc.nextInt();
         System.out.println("Your Shopping Cart has the products below:");
          try {
-          listShoppingCartProductsRequest request =
-              listShoppingCartProductsRequest.newBuilder().setCartId(id).build();
-          Iterator<listShoppingCartProductsResponse> listShoppingCartProductsResponseIterator =
+          ListShoppingCartProductsRequest request =
+              ListShoppingCartProductsRequest.newBuilder().setCartId(id).build();
+          Iterator<ListShoppingCartProductsResponse> listShoppingCartProductsResponseIterator =
               prodStub.listShoppingCartProducts(request);
           while (listShoppingCartProductsResponseIterator.hasNext()) {
-            listShoppingCartProductsResponse next = listShoppingCartProductsResponseIterator.next();
+            ListShoppingCartProductsResponse next = listShoppingCartProductsResponseIterator.next();
             System.out.printf("Product Id: %d Product Name: %s  Price: %.2f Quantity: %d \n",
                 next.getIdProduct(), next.getName(), next.getPrice(), next.getQuantity());
             }
@@ -128,10 +128,10 @@ public class Client {
       if (option == 7) {
         System.out.println("Type the id of Shopping Cart that you desire to calculate the amount");
         int shoppingCartId = sc.nextInt();
-        calculateTotalAmountRequest calculateTotalAmountRequest =
-            generated.calculateTotalAmountRequest.newBuilder()
+        CalculateTotalAmountRequest calculateTotalAmountRequest =
+            generated.CalculateTotalAmountRequest.newBuilder()
                 .setIdShoppingCart(shoppingCartId).build();
-        calculateTotalAmountResponse calculateTotalAmountResponse =
+        CalculateTotalAmountResponse calculateTotalAmountResponse =
             prodStub.calculateTotalAmount(calculateTotalAmountRequest);
         float total = calculateTotalAmountResponse.getTotalAmount();
         System.out.println("Total Amount of sale: R$" + total);

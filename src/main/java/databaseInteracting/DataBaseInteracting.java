@@ -20,7 +20,7 @@ public class DataBaseInteracting {
    */
   public DataBaseInteracting(String url, String user, String password) throws SQLException {
     DataBaseConnection dataBaseConnection =
-        new DatabaseInteracting.DataBaseConnection(url, user, password);
+        new databaseInteracting.DataBaseConnection(url, user, password);
     connection = dataBaseConnection.getConnection();
   }
 
@@ -89,7 +89,7 @@ public class DataBaseInteracting {
     List<databaseInteracting.Product> list = new ArrayList<>();
     try (PreparedStatement preparedStatement = createPrepareStatementToProductList();
          ResultSet aResultSet = createResultSet(preparedStatement)) {
-      PrepareAndExecuteMethod(aResultSet, list);
+      prepareAndExecuteMethod(aResultSet, list);
     }
     return list;
   }
