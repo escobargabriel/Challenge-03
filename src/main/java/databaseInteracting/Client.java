@@ -17,7 +17,6 @@ import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -60,7 +59,7 @@ public class Client {
                 next.getId(), next.getName(), next.getStock(), next.getPrice());
           }
         } catch (Exception e) {
-          e.printStackTrace();
+          throw new RuntimeException(e);
         }
       }
       if (option == 2) {
@@ -122,7 +121,7 @@ public class Client {
                 next.getIdProduct(), next.getName(), next.getPrice(), next.getQuantity());
             }
           } catch (Exception e) {
-          e.printStackTrace();
+           throw new RuntimeException(e);
           }
       }
       if (option == 7) {
