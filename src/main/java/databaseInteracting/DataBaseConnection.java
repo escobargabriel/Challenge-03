@@ -16,9 +16,9 @@ public class DataBaseConnection {
    * @param password String - Password of database.
    */
   public DataBaseConnection(String url, String user, String password) {
-    DataBaseConnection.url = url;
-    DataBaseConnection.password = password;
-    DataBaseConnection.user = user;
+    this.url = url;
+    this.password = password;
+    this.user = user;
   }
 
   public Connection getConnection() throws SQLException {
