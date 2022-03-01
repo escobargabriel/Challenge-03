@@ -17,17 +17,11 @@ public class Server {
     String password = args[3];
 
     io.grpc.Server server = ServerBuilder.forPort(port).addService(new ProductService(url, user, password)).build();
-
     server.start();
-
     logger.info("Server started on" + server.getPort());
-
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       server.shutdown();
     }));
-
     server.awaitTermination();
-
   }
-
 }
