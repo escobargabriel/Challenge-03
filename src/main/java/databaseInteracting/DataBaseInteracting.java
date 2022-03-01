@@ -101,7 +101,7 @@ public class DataBaseInteracting {
   */
   public ResultSet searchForAllProductsOnShoppingCart(int cartId) throws SQLException {
     String sql = "SELECT p.id, p.name, p.price, l.quantity FROM products p," +
-        " shoppinglist l, shoppingcart c where p.id = l.idproduct AND l.idcart = ?;";
+        " shoppinglist l where p.id = l.idproduct AND l.idcart = ?;";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
       preparedStatement.setInt(1,cartId);
       return preparedStatement.executeQuery();
