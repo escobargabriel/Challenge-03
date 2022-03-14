@@ -1,5 +1,12 @@
 package databaseInteracting;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Scanner;
+import java.util.logging.Logger;
+
 import generated.AddProductRequest;
 import generated.AddProductResponse;
 import generated.AddProductsToShoppingCartRequest;
@@ -8,6 +15,8 @@ import generated.CalculateTotalAmountRequest;
 import generated.CalculateTotalAmountResponse;
 import generated.CreateAShoppingCartRequest;
 import generated.CreateAShoppingCartResponse;
+import generated.DataChunk;
+import generated.DownloadFileRequest;
 import generated.ListByIdRequest;
 import generated.ListByIdResponse;
 import generated.ListProductRequest;
@@ -17,8 +26,7 @@ import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import java.util.Iterator;
-import java.util.Scanner;
+
 
 public class Client {
   /**
@@ -27,7 +35,8 @@ public class Client {
    *
    * @param args Array of String to pass parameters.
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, IOException {
+    Logger log = Logger.getLogger(Client.class.getName());
     String channelName = args[0];
     int portNumber = Integer.parseInt(args[1]);
     ManagedChannel channel = ManagedChannelBuilder
@@ -136,12 +145,53 @@ public class Client {
         System.out.println("Total Amount of sale: R$" + total);
       }
       if (option == 8) {
-        System.out.println("Importing products from a file");
-        System.out.println("Under construction");
+        System.out.println("Exporting products from a file");
+        int exportOption = 0;
+        do {
+          System.out.println("Select the type of file you desire:");
+          System.out.println("[1] - Json file. ");
+          System.out.println("[2] - Parquet  file. ");
+          exportOption = scanner.nextInt();
+          if (exportOption == 1) {
+            System.out.println("Invoke method to export database do Json file");
+            DownloadFileRequest downloadFileRequest =
+                DownloadFileRequest.newBuilder().setFileName("products.json").build();
+            Iterator<DataChunk> dataChunkIterator = prodStub.downloadFile(downloadFileRequest);
+            while (dataChunkIterator.hasNext()) {
+              DataChunk next = dataChunkIterator.next();
+              FileWriter fileWriter = new FileWriter("products.json");
+              fileWriter.write(next.getData());
+              fileWriter.flush();
+              fileWriter.close();
+              break;
+            }
+            /* Testing */
+            /* DataBaseInteracting dataBaseInteracting =
+                new DataBaseInteracting("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+            dataBaseInteracting.exportDatabaseToJson(); */
+          } else if (exportOption == 2) {
+            System.out.println("Invoke method to export database do Json file");
+          } else {
+            System.out.println("Invalid option");
+          }
+        } while (exportOption < 1 || exportOption > 2);
       }
       if (option == 9) {
         System.out.println("Exporting of execution to a file");
-        System.out.println("Under construction");
+        int importOption = 0;
+        do {
+          System.out.println("Select the type of file you desire:");
+          System.out.println("[1] - Parquet file. ");
+          System.out.println("[2] - Json file. ");
+          importOption = scanner.nextInt();
+          if (importOption == 1) {
+            System.out.println("Invoke method to import database do Parquet file");
+          } else if (importOption == 2) {
+            System.out.println("Invoke method to import database do Json file");
+          } else {
+            System.out.println("Invalid option");
+          }
+        } while (importOption < 1 || importOption > 2);
       }
       if (option == 10) {
         System.out.println("End of execution");

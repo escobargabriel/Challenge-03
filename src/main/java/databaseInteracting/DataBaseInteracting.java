@@ -1,11 +1,16 @@
 package databaseInteracting;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class DataBaseInteracting {
   Connection connection;
@@ -93,18 +98,18 @@ public class DataBaseInteracting {
     }
     return list;
   }
-  /*
+
   /**
    * Method to make a query into the shopping cart table.
    * @return a list of products from shopping cart table.
    * @throws SQLException - Exception of database.
   */
   public ResultSet searchForAllProductsOnShoppingCart(int cartId) throws SQLException {
-    String sql = "SELECT p.id, p.name, p.price, l.quantity FROM products p," +
-        " shoppinglist l where p.id = l.idproduct AND l.idcart = ?;";
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-      preparedStatement.setInt(1,cartId);
-      return preparedStatement.executeQuery();
+    String sql = "SELECT p.id, p.name, p.price, l.quantity FROM products p,"
+        + " shoppinglist l where p.id = l.idproduct AND l.idcart = ?;";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setInt(1, cartId);
+    return preparedStatement.executeQuery();
   }
 
   /**
@@ -116,8 +121,8 @@ public class DataBaseInteracting {
    */
   public ResultSet calculateTotalAmount(int shoppingCartId) throws SQLException {
     PreparedStatement preparedStatement = connection.prepareStatement(
-        "SELECT SUM (p.price * l.quantity) AS totalSum FROM  products p," +
-        " shoppinglist l, shoppingcart c WHERE l.idProduct = p.id AND c.idShoppingCart = ?;");
+        "SELECT SUM (p.price * l.quantity) AS totalSum FROM  products p,"
+            + " shoppinglist l, shoppingcart c WHERE l.idProduct = p.id AND c.idShoppingCart = ?;");
     preparedStatement.setInt(1, shoppingCartId);
     return preparedStatement.executeQuery();
   }
@@ -169,5 +174,23 @@ public class DataBaseInteracting {
       product.setPrice(resultSet.getFloat("price"));
       list.add(product);
     }
+  }
+
+  public void exportDatabaseToJson() throws SQLException, IOException {
+    FileWriter file = new FileWriter("products.json");
+    JSONArray jsonArray = new JSONArray();
+    List<Product> products = searchForAllProductsOnDatabase();
+    for (Product product : products) {
+      JSONObject jsonObject = new JSONObject();
+      jsonObject.put("price", product.getPrice());
+      jsonObject.put("stock", product.getStock());
+      jsonObject.put("name", product.getName());
+      jsonObject.put("id", product.getId());
+      jsonArray.add(jsonObject);
+    }
+    file.write(jsonArray.toString());
+    file.flush();
+    file.close();
+    System.out.println("Json file created");
   }
 }

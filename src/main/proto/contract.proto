@@ -6,13 +6,23 @@ option java_package = "generated";
 option java_outer_classname = "ProductsProtos";
 
 service product {
-  rpc AddProduct(AddProductRequest) returns (AddProductResponse) {};
-  rpc ListProduct(ListProductRequest) returns (stream ListProductResponse) {};
-  rpc ListById(ListByIdRequest) returns (ListByIdResponse) {};
-  rpc CreateAShoppingCart(CreateAShoppingCartRequest) returns (CreateAShoppingCartResponse) {};
-  rpc AddProductsToShoppingCart(AddProductsToShoppingCartRequest) returns (AddProductsToShoppingCartResponse){};
-  rpc ListShoppingCartProducts(ListShoppingCartProductsRequest) returns (stream ListShoppingCartProductsResponse) {};
-  rpc CalculateTotalAmount(CalculateTotalAmountRequest)  returns (CalculateTotalAmountResponse){};
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse) {};
+  rpc ListProduct (ListProductRequest) returns (stream ListProductResponse) {};
+  rpc ListById (ListByIdRequest) returns (ListByIdResponse) {};
+  rpc CreateAShoppingCart (CreateAShoppingCartRequest) returns (CreateAShoppingCartResponse) {};
+  rpc AddProductsToShoppingCart (AddProductsToShoppingCartRequest) returns (AddProductsToShoppingCartResponse){};
+  rpc ListShoppingCartProducts (ListShoppingCartProductsRequest) returns (stream ListShoppingCartProductsResponse) {};
+  rpc CalculateTotalAmount (CalculateTotalAmountRequest)  returns (CalculateTotalAmountResponse){};
+  rpc DownloadFile (DownloadFileRequest) returns (stream DataChunk) {};
+}
+
+message DataChunk{
+  string data = 1;
+  int32 size = 2;
+}
+
+message DownloadFileRequest{
+  string fileName = 1;
 }
 
 message CreateAShoppingCartRequest {

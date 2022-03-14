@@ -1,5 +1,12 @@
 package Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import databaseInteracting.DataBaseInteracting;
 import databaseInteracting.Product;
 import generated.AddProductRequest;
@@ -10,6 +17,8 @@ import generated.CalculateTotalAmountRequest;
 import generated.CalculateTotalAmountResponse;
 import generated.CreateAShoppingCartRequest;
 import generated.CreateAShoppingCartResponse;
+import generated.DataChunk;
+import generated.DownloadFileRequest;
 import generated.ListByIdRequest;
 import generated.ListByIdResponse;
 import generated.ListProductRequest;
@@ -18,9 +27,7 @@ import generated.ListShoppingCartProductsRequest;
 import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.stub.StreamObserver;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+
 
 public class ProductService extends productGrpc.productImplBase {
   DataBaseInteracting dataBaseInteracting;
@@ -39,8 +46,8 @@ public class ProductService extends productGrpc.productImplBase {
         String name = resultSet.getString(2);
         int stock = resultSet.getInt(3);
         float price = resultSet.getFloat(4);
-        ListByIdResponse listByIdResponse = generated.ListByIdResponse.newBuilder().
-            setId(id).setName(name).setStock(stock).setPrice(price).build();
+        ListByIdResponse listByIdResponse = generated.ListByIdResponse.newBuilder()
+            .setId(id).setName(name).setStock(stock).setPrice(price).build();
         responseObserver.onNext(listByIdResponse);
         responseObserver.onCompleted();
       }
@@ -106,7 +113,7 @@ public class ProductService extends productGrpc.productImplBase {
   @Override
   public void listShoppingCartProducts(ListShoppingCartProductsRequest request,
                                        StreamObserver<ListShoppingCartProductsResponse> responseObserver) {
-    try{
+    try {
       int cartId = request.getCartId();
       ResultSet resultSet = dataBaseInteracting.searchForAllProductsOnShoppingCart(cartId);
       while (resultSet.next()) {
@@ -149,7 +156,7 @@ public class ProductService extends productGrpc.productImplBase {
   @Override
   public void createAShoppingCart(CreateAShoppingCartRequest request,
                                   StreamObserver<CreateAShoppingCartResponse> responseObserver) {
-    try{
+    try {
       String name = request.getName();
       dataBaseInteracting.createAShoppingCart(name);
       CreateAShoppingCartResponse createAShoppingCartResponse =
@@ -159,6 +166,29 @@ public class ProductService extends productGrpc.productImplBase {
     } catch (SQLException e) {
       responseObserver.onError(e);
     }
+  }
 
+  @Override
+  public void downloadFile(DownloadFileRequest request, StreamObserver<DataChunk> responseObserver) {
+    DataChunk.Builder fileResponse = DataChunk.newBuilder();
+    try {
+      JSONArray jsonArray = new JSONArray();
+      List<Product> products = dataBaseInteracting.searchForAllProductsOnDatabase();
+      for (Product product : products) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("price", product.getPrice());
+        jsonObject.put("stock", product.getStock());
+        jsonObject.put("name", product.getName());
+        jsonObject.put("id", product.getId());
+        jsonArray.add(jsonObject);
+      }
+      String bytes = jsonArray.toJSONString();
+      fileResponse.setData(bytes);
+      fileResponse.setSize(jsonArray.size());
+      responseObserver.onNext(fileResponse.build());
+      System.out.println("Json file created");
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
