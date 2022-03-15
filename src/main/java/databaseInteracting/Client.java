@@ -50,6 +50,8 @@ public class Client {
     Logger log = Logger.getLogger(Client.class.getName());
     String channelName = args[0];
     int portNumber = Integer.parseInt(args[1]);
+    String jsonImportFileName = args[2];
+    String jsonExportFileName = args[3];
     ManagedChannel channel = ManagedChannelBuilder
         .forAddress(channelName, portNumber).usePlaintext().build();
     productGrpc.productBlockingStub prodStub = productGrpc.newBlockingStub(channel);
