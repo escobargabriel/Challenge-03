@@ -1,16 +1,11 @@
 package databaseInteracting;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class DataBaseInteracting {
   Connection connection;
@@ -174,23 +169,5 @@ public class DataBaseInteracting {
       product.setPrice(resultSet.getFloat("price"));
       list.add(product);
     }
-  }
-
-  public void exportDatabaseToJson() throws SQLException, IOException {
-    FileWriter file = new FileWriter("products.json");
-    JSONArray jsonArray = new JSONArray();
-    List<Product> products = searchForAllProductsOnDatabase();
-    for (Product product : products) {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put("price", product.getPrice());
-      jsonObject.put("stock", product.getStock());
-      jsonObject.put("name", product.getName());
-      jsonObject.put("id", product.getId());
-      jsonArray.add(jsonObject);
-    }
-    file.write(jsonArray.toString());
-    file.flush();
-    file.close();
-    System.out.println("Json file created");
   }
 }

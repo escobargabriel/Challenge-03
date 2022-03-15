@@ -1,12 +1,6 @@
 package databaseInteracting;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.logging.Logger;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import generated.AddProductRequest;
 import generated.AddProductResponse;
 import generated.AddProductsToShoppingCartRequest;
@@ -26,7 +20,12 @@ import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class Client {
   /**
@@ -35,10 +34,11 @@ public class Client {
    *
    * @param args Array of String to pass parameters.
    */
-  public static void main(String[] args) throws SQLException, IOException {
-    Logger log = Logger.getLogger(Client.class.getName());
+  public static void main(String[] args) throws IOException {
     String channelName = args[0];
     int portNumber = Integer.parseInt(args[1]);
+    String jsonImportFileName = args[2];
+    String jsonExportFileName = args[3];
     ManagedChannel channel = ManagedChannelBuilder
         .forAddress(channelName, portNumber).usePlaintext().build();
     productGrpc.productBlockingStub prodStub = productGrpc.newBlockingStub(channel);
@@ -54,8 +54,8 @@ public class Client {
       System.out.println("[5] - Add a product to Shopping Cart");
       System.out.println("[6] - Show the Shopping Cart");
       System.out.println("[7] - Calculate the total purchase amount.");
-      System.out.println("[8] - Import products from a file.");
-      System.out.println("[9] - Export products to a file.");
+      System.out.println("[8] - Export products to a file.");
+      System.out.println("[9] - Import products from a file.");
       System.out.println("[10] - Finish execution");
       option = scanner.nextInt();
       if (option == 1) {
@@ -153,22 +153,18 @@ public class Client {
           System.out.println("[2] - Parquet  file. ");
           exportOption = scanner.nextInt();
           if (exportOption == 1) {
-            System.out.println("Invoke method to export database do Json file");
+            System.out.println("Downloading data from data base...");
             DownloadFileRequest downloadFileRequest =
-                DownloadFileRequest.newBuilder().setFileName("products.json").build();
+                DownloadFileRequest.newBuilder().setFileName(jsonImportFileName).build();
             Iterator<DataChunk> dataChunkIterator = prodStub.downloadFile(downloadFileRequest);
             while (dataChunkIterator.hasNext()) {
               DataChunk next = dataChunkIterator.next();
-              FileWriter fileWriter = new FileWriter("products.json");
+              FileWriter fileWriter = new FileWriter(jsonImportFileName);
               fileWriter.write(next.getData());
               fileWriter.flush();
               fileWriter.close();
               break;
             }
-            /* Testing */
-            /* DataBaseInteracting dataBaseInteracting =
-                new DataBaseInteracting("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
-            dataBaseInteracting.exportDatabaseToJson(); */
           } else if (exportOption == 2) {
             System.out.println("Invoke method to export database do Json file");
           } else {
@@ -181,11 +177,25 @@ public class Client {
         int importOption = 0;
         do {
           System.out.println("Select the type of file you desire:");
-          System.out.println("[1] - Parquet file. ");
-          System.out.println("[2] - Json file. ");
+          System.out.println("[1] - Json file. ");
+          System.out.println("[2] - Parquet file. ");
           importOption = scanner.nextInt();
           if (importOption == 1) {
-            System.out.println("Invoke method to import database do Parquet file");
+            System.out.println("Reading data from the JSON file and store on the database.");
+            byte[] mapData = Files.readAllBytes(Paths.get(jsonExportFileName));
+            Product[] productsArray = null;
+            ObjectMapper objectMapper = new ObjectMapper();
+            productsArray = objectMapper.readValue(mapData, Product[].class);
+            Product[] productList = productsArray;
+            for (Product product : productList) {
+              String name = product.getName();
+              int stock = product.getStock();
+              float price = product.getPrice();
+              AddProductRequest request =
+                  AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
+              AddProductResponse response = prodStub.addProduct(request);
+              System.out.println(response.getName());
+            }
           } else if (importOption == 2) {
             System.out.println("Invoke method to import database do Json file");
           } else {
