@@ -167,10 +167,6 @@ public class Client {
               fileWriter.close();
               break;
             }
-            /* Testing */
-            /* DataBaseInteracting dataBaseInteracting =
-                new DataBaseInteracting("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
-            dataBaseInteracting.exportDatabaseToJson(); */
           } else if (exportOption == 2) {
             System.out.println("Invoke method to export database do Json file");
           } else {
