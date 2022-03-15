@@ -63,8 +63,8 @@ public class Client {
       System.out.println("[5] - Add a product to Shopping Cart");
       System.out.println("[6] - Show the Shopping Cart");
       System.out.println("[7] - Calculate the total purchase amount.");
-      System.out.println("[8] - Import products from a file.");
-      System.out.println("[9] - Export products to a file.");
+      System.out.println("[8] - Export products to a file.");
+      System.out.println("[9] - Import products from a file.");
       System.out.println("[10] - Finish execution");
       option = scanner.nextInt();
       if (option == 1) {
