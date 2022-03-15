@@ -198,7 +198,21 @@ public class Client {
           System.out.println("[2] - Json file. ");
           importOption = scanner.nextInt();
           if (importOption == 1) {
-            System.out.println("Invoke method to import database do Parquet file");
+            System.out.println("Reading data from the JSON file and store on the database.");
+            byte[] mapData = Files.readAllBytes(Paths.get(jsonExportFileName));
+            Product[] productsArray = null;
+            ObjectMapper objectMapper = new ObjectMapper();
+            productsArray = objectMapper.readValue(mapData, Product[].class);
+            Product[] productList = productsArray;
+            for (Product product : productList) {
+              String name = product.getName();
+              int stock = product.getStock();
+              float price = product.getPrice();
+              AddProductRequest request =
+                  AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
+              AddProductResponse response = prodStub.addProduct(request);
+              System.out.println(response.getName());
+            }
           } else if (importOption == 2) {
             System.out.println("Invoke method to import database do Json file");
           } else {
