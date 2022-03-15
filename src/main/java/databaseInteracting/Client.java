@@ -177,8 +177,8 @@ public class Client {
         int importOption = 0;
         do {
           System.out.println("Select the type of file you desire:");
-          System.out.println("[1] - Parquet file. ");
-          System.out.println("[2] - Json file. ");
+          System.out.println("[1] - Json file. ");
+          System.out.println("[2] - Parquet file. ");
           importOption = scanner.nextInt();
           if (importOption == 1) {
             System.out.println("Reading data from the JSON file and store on the database.");
