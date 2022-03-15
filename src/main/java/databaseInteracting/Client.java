@@ -1,7 +1,6 @@
 package databaseInteracting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import generated.AddProductRequest;
 import generated.AddProductResponse;
 import generated.AddProductsToShoppingCartRequest;
