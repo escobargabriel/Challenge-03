@@ -28,13 +28,6 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-
 public class Client {
   /**
    * Main Method of class.
