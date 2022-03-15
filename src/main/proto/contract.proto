@@ -1,0 +1,102 @@
+syntax = "proto3";
+package proto;
+
+option java_multiple_files = true;
+option java_package = "generated";
+option java_outer_classname = "ProductsProtos";
+
+service product {
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse) {};
+  rpc ListProduct (ListProductRequest) returns (stream ListProductResponse) {};
+  rpc ListById (ListByIdRequest) returns (ListByIdResponse) {};
+  rpc CreateAShoppingCart (CreateAShoppingCartRequest) returns (CreateAShoppingCartResponse) {};
+  rpc AddProductsToShoppingCart (AddProductsToShoppingCartRequest) returns (AddProductsToShoppingCartResponse){};
+  rpc ListShoppingCartProducts (ListShoppingCartProductsRequest) returns (stream ListShoppingCartProductsResponse) {};
+  rpc CalculateTotalAmount (CalculateTotalAmountRequest)  returns (CalculateTotalAmountResponse){};
+  rpc DownloadFile (DownloadFileRequest) returns (stream DataChunk) {};
+}
+
+message DataChunk{
+  string data = 1;
+  int32 size = 2;
+}
+
+message DownloadFileRequest{
+  string fileName = 1;
+}
+
+message CreateAShoppingCartRequest {
+  string name = 1;
+}
+
+message CreateAShoppingCartResponse {
+  string name = 1;
+  int32 id = 2;
+}
+
+message CalculateTotalAmountRequest {
+  int32 idShoppingCart = 1;
+}
+message CalculateTotalAmountResponse {
+  float totalAmount = 1;
+}
+message AddProductsToShoppingCartRequest {
+  int32 idShoppingCart = 1;
+  int32 idProduct = 2;
+  int32 quantity = 3;
+}
+
+message AddProductsToShoppingCartResponse {
+  int32 idShoppingCart = 1;
+  int32 idProduct = 2;
+  int32 quantity = 3;
+}
+
+message ListProductRequest {
+}
+
+message ListProductResponse {
+  int32 id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+
+message ShowRequest {
+}
+
+message AddProductRequest {
+  int32 id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+
+message AddProductResponse {
+  int32 id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+
+message ListByIdRequest {
+  int32 id = 1;
+}
+
+message ListByIdResponse {
+  int32 id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+
+message ListShoppingCartProductsRequest {
+  int32 cartId = 1;
+}
+
+message ListShoppingCartProductsResponse {
+  int32 idProduct = 1;
+  string name = 2;
+  float price = 3;
+  int32 quantity = 4;
+}
