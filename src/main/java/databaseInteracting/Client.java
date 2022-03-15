@@ -34,8 +34,7 @@ public class Client {
    *
    * @param args Array of String to pass parameters.
    */
-  public static void main(String[] args) throws SQLException, IOException {
-    Logger log = Logger.getLogger(Client.class.getName());
+  public static void main(String[] args) throws IOException {
     String channelName = args[0];
     int portNumber = Integer.parseInt(args[1]);
     String jsonImportFileName = args[2];
