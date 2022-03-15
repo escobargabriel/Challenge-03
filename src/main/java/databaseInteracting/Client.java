@@ -166,13 +166,13 @@ public class Client {
           System.out.println("[2] - Parquet  file. ");
           exportOption = scanner.nextInt();
           if (exportOption == 1) {
-            System.out.println("Invoke method to export database do Json file");
+            System.out.println("Downloading data from data base...");
             DownloadFileRequest downloadFileRequest =
-                DownloadFileRequest.newBuilder().setFileName("products.json").build();
+                DownloadFileRequest.newBuilder().setFileName(jsonImportFileName).build();
             Iterator<DataChunk> dataChunkIterator = prodStub.downloadFile(downloadFileRequest);
             while (dataChunkIterator.hasNext()) {
               DataChunk next = dataChunkIterator.next();
-              FileWriter fileWriter = new FileWriter("products.json");
+              FileWriter fileWriter = new FileWriter(jsonImportFileName);
               fileWriter.write(next.getData());
               fileWriter.flush();
               fileWriter.close();
