@@ -170,22 +170,4 @@ public class DataBaseInteracting {
       list.add(product);
     }
   }
-
-  public void exportDatabaseToJson() throws SQLException, IOException {
-    FileWriter file = new FileWriter("products.json");
-    JSONArray jsonArray = new JSONArray();
-    List<Product> products = searchForAllProductsOnDatabase();
-    for (Product product : products) {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put("price", product.getPrice());
-      jsonObject.put("stock", product.getStock());
-      jsonObject.put("name", product.getName());
-      jsonObject.put("id", product.getId());
-      jsonArray.add(jsonObject);
-    }
-    file.write(jsonArray.toString());
-    file.flush();
-    file.close();
-    System.out.println("Json file created");
-  }
 }
