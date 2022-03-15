@@ -188,7 +188,7 @@ public class ProductService extends productGrpc.productImplBase {
       responseObserver.onNext(fileResponse.build());
       System.out.println("Json file created");
     } catch (SQLException e) {
-      e.printStackTrace();
+      responseObserver.onError(e);
     }
   }
 }
