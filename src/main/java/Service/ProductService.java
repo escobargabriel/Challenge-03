@@ -1,12 +1,5 @@
 package Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import databaseInteracting.DataBaseInteracting;
 import databaseInteracting.Product;
 import generated.AddProductRequest;
@@ -18,7 +11,11 @@ import generated.CalculateTotalAmountResponse;
 import generated.CreateAShoppingCartRequest;
 import generated.CreateAShoppingCartResponse;
 import generated.DataChunk;
+import generated.DataChunkParquet;
+import generated.DataChunkXml;
 import generated.DownloadFileRequest;
+import generated.DownloadFileRequestParquet;
+import generated.DownloadFileRequestXml;
 import generated.ListByIdRequest;
 import generated.ListByIdResponse;
 import generated.ListProductRequest;
@@ -27,7 +24,21 @@ import generated.ListShoppingCartProductsRequest;
 import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.stub.StreamObserver;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.IllegalAddException;
+import nu.xom.Node;
+import nu.xom.Nodes;
+import nu.xom.ParentNode;
+import nu.xom.Serializer;
+import nu.xom.Text;
 
 public class ProductService extends productGrpc.productImplBase {
   DataBaseInteracting dataBaseInteracting;
@@ -187,6 +198,49 @@ public class ProductService extends productGrpc.productImplBase {
       fileResponse.setSize(jsonArray.size());
       responseObserver.onNext(fileResponse.build());
       System.out.println("Json file created");
+    } catch (SQLException e) {
+      responseObserver.onError(e);
+    }
+  }
+
+  @Override
+  public void downloadFileXml(DownloadFileRequestXml request, StreamObserver<DataChunkXml> responseObserver) {
+    DataChunkXml.Builder fileResponse = DataChunkXml.newBuilder();
+    Element root = new Element("Exemple");
+    try {
+      List<Product> products = dataBaseInteracting.searchForAllProductsOnDatabase();
+      for (Product product : products) {
+        String id = String.valueOf(product.getId());
+        String stock = String.valueOf(product.getStock());
+        String price = String.valueOf(product.getPrice());
+        String [][] data = {{"id", id}, {"name", product.getName()},{"stock", stock},{"price", price}};
+        String bytes = data.toString();
+        fileResponse.setData(bytes);
+        fileResponse.setSize(data.length);
+        responseObserver.onNext(fileResponse.build());
+      }
+    } catch (SQLException e) {
+      responseObserver.onError(e);
+    }
+  }
+
+  @Override
+  public void downloadFileParquet(DownloadFileRequestParquet request,
+                                  StreamObserver<DataChunkParquet> responseObserver) {
+    //DataChunkParquet.Builder dataChunkParquet = DataChunkParquet.newBuilder();
+    try{
+      List<Product> products = dataBaseInteracting.searchForAllProductsOnDatabase();
+      for (Product product : products) {
+        int id = product.getId();
+        String name = product.getName();
+        int stock = product.getStock();
+        float price = product.getPrice();
+        DataChunkParquet dataChunkParquet =
+            generated.DataChunkParquet.newBuilder().setId(id).setName(name).setStock(stock).setPrice(price).build();
+        responseObserver.onNext(dataChunkParquet);
+      }
+      responseObserver.onCompleted();
+
     } catch (SQLException e) {
       responseObserver.onError(e);
     }

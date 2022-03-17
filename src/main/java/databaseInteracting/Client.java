@@ -1,5 +1,6 @@
 package databaseInteracting;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import generated.AddProductRequest;
 import generated.AddProductResponse;
@@ -20,14 +21,35 @@ import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Scanner;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Serializer;
 
 public class Client {
+  public static int printMenu(Scanner scanner) {
+    System.out.println("Select one option:");
+    System.out.println("[1] - List all products");
+    System.out.println("[2] - Search a product");
+    System.out.println("[3] - Add a product");
+    System.out.println("[4] - Create a Shopping Cart");
+    System.out.println("[5] - Add a product to Shopping Cart");
+    System.out.println("[6] - Show the Shopping Cart");
+    System.out.println("[7] - Calculate the total purchase amount.");
+    System.out.println("[8] - Export products to a file.");
+    System.out.println("[9] - Import products from a file.");
+    System.out.println("[10] - Finish execution");
+    return scanner.nextInt();
+  }
+
+
   /**
    * Main Method of class.
    * Class with a menu to interact with the database and the server side.
@@ -45,19 +67,9 @@ public class Client {
     Scanner scanner = new Scanner(System.in);
     int option;
     int aux;
+
     do {
-      System.out.println("Select one option:");
-      System.out.println("[1] - List all products");
-      System.out.println("[2] - Search a product");
-      System.out.println("[3] - Add a product");
-      System.out.println("[4] - Create a Shopping Cart");
-      System.out.println("[5] - Add a product to Shopping Cart");
-      System.out.println("[6] - Show the Shopping Cart");
-      System.out.println("[7] - Calculate the total purchase amount.");
-      System.out.println("[8] - Export products to a file.");
-      System.out.println("[9] - Import products from a file.");
-      System.out.println("[10] - Finish execution");
-      option = scanner.nextInt();
+      option = printMenu(scanner);
       if (option == 1) {
         try {
           ListProductRequest request = ListProductRequest.newBuilder().build();
@@ -150,7 +162,7 @@ public class Client {
         do {
           System.out.println("Select the type of file you desire:");
           System.out.println("[1] - Json file. ");
-          System.out.println("[2] - Parquet  file. ");
+          System.out.println("[2] - XML  file. ");
           exportOption = scanner.nextInt();
           if (exportOption == 1) {
             System.out.println("Downloading data from data base...");
@@ -166,7 +178,40 @@ public class Client {
               break;
             }
           } else if (exportOption == 2) {
-            System.out.println("Invoke method to export database do Json file");
+            try {
+              Element root = new Element("example");
+              ListProductRequest request = ListProductRequest.newBuilder().build();
+              Iterator<ListProductResponse> listProductResponseIterator = prodStub.listProduct(request);
+              while (listProductResponseIterator.hasNext()) {
+                Element productElement = new Element("product");
+                Element idElement = new Element("id");
+                Element nameElement = new Element("name");
+                Element stockElement = new Element("stock");
+                Element priceElement = new Element("price");
+                ListProductResponse next = listProductResponseIterator.next();
+                idElement.appendChild(String.valueOf(next.getId()));
+                nameElement.appendChild(next.getName());
+                stockElement.appendChild(String.valueOf(next.getStock()));
+                priceElement.appendChild(String.valueOf(next.getPrice()));
+                productElement.appendChild(idElement);
+                productElement.appendChild(nameElement);
+                productElement.appendChild(stockElement);
+                productElement.appendChild(priceElement);
+                root.appendChild(productElement);
+              }
+              Document document = new Document(root);
+              File file = new File("products.xml");
+              if (!file.exists()) {
+                file.createNewFile();
+              }
+              FileOutputStream fileOutputStream = new FileOutputStream(file);
+              Serializer serializer = new Serializer(fileOutputStream, "UTF-8");
+              serializer.setIndent(4);
+              serializer.write(document);
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+
           } else {
             System.out.println("Invalid option");
           }
@@ -178,7 +223,7 @@ public class Client {
         do {
           System.out.println("Select the type of file you desire:");
           System.out.println("[1] - Json file. ");
-          System.out.println("[2] - Parquet file. ");
+          System.out.println("[2] - XML file. ");
           importOption = scanner.nextInt();
           if (importOption == 1) {
             System.out.println("Reading data from the JSON file and store on the database.");

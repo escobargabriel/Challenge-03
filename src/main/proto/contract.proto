@@ -14,6 +14,28 @@ service product {
   rpc ListShoppingCartProducts (ListShoppingCartProductsRequest) returns (stream ListShoppingCartProductsResponse) {};
   rpc CalculateTotalAmount (CalculateTotalAmountRequest)  returns (CalculateTotalAmountResponse){};
   rpc DownloadFile (DownloadFileRequest) returns (stream DataChunk) {};
+  rpc DownloadFileParquet (DownloadFileRequestParquet) returns (stream DataChunkParquet) {};
+  rpc DownloadFileXml (DownloadFileRequestXml) returns (stream DataChunkXml) {};
+}
+
+message DataChunkParquet{
+  int32 id = 1;
+  string name = 2;
+  int32 stock = 3;
+  float price = 4;
+}
+
+message DownloadFileRequestParquet{
+  string fileName = 1;
+}
+
+message DataChunkXml{
+  string data = 1;
+  int32 size = 2;
+}
+
+message DownloadFileRequestXml{
+  string fileName = 1;
 }
 
 message DataChunk{
