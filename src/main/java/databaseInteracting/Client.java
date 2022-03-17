@@ -1,6 +1,5 @@
 package databaseInteracting;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import generated.AddProductRequest;
 import generated.AddProductResponse;
@@ -29,9 +28,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Scanner;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Serializer;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 
 public class Client {
   public static int printMenu(Scanner scanner) {
@@ -56,7 +62,7 @@ public class Client {
    *
    * @param args Array of String to pass parameters.
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
     String channelName = args[0];
     int portNumber = Integer.parseInt(args[1]);
     String jsonImportFileName = args[2];
@@ -179,7 +185,7 @@ public class Client {
             }
           } else if (exportOption == 2) {
             try {
-              Element root = new Element("example");
+              Element root = new Element("Products");
               ListProductRequest request = ListProductRequest.newBuilder().build();
               Iterator<ListProductResponse> listProductResponseIterator = prodStub.listProduct(request);
               while (listProductResponseIterator.hasNext()) {
@@ -242,7 +248,28 @@ public class Client {
               System.out.println(response.getName());
             }
           } else if (importOption == 2) {
-            System.out.println("Invoke method to import database do Json file");
+            System.out.println("Invoke method to import products to the database from a XML file");
+            File file = new File("inputProducts.xml");
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            org.w3c.dom.Document document = documentBuilder.parse(file);
+            document.getDocumentElement().normalize();
+            System.out.println("Root Element: " + document.getDocumentElement().getNodeName());
+            NodeList nodeList = document.getElementsByTagName("product");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+              Node node = nodeList.item(i);
+              System.out.println("Node name " + node.getNodeName());
+              if (node.getNodeType() == Node.ELEMENT_NODE) {
+                org.w3c.dom.Element eElement = (org.w3c.dom.Element) node;
+                String name = eElement.getElementsByTagName("name").item(0).getTextContent();
+                int stock = Integer.parseInt(eElement.getElementsByTagName("stock").item(0).getTextContent());
+                float price = Float.parseFloat(eElement.getElementsByTagName("price").item(0).getTextContent());
+                AddProductRequest request =
+                    AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
+                AddProductResponse response = prodStub.addProduct(request);
+                System.out.println(response.getName());
+              }
+            }
           } else {
             System.out.println("Invalid option");
           }
