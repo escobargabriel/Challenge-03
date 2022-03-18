@@ -1,45 +1,20 @@
 package databaseInteracting;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import generated.AddProductRequest;
-import generated.AddProductResponse;
-import generated.AddProductsToShoppingCartRequest;
-import generated.AddProductsToShoppingCartResponse;
-import generated.CalculateTotalAmountRequest;
-import generated.CalculateTotalAmountResponse;
-import generated.CreateAShoppingCartRequest;
-import generated.CreateAShoppingCartResponse;
-import generated.DataChunk;
-import generated.DownloadFileRequest;
-import generated.ListByIdRequest;
-import generated.ListByIdResponse;
-import generated.ListProductRequest;
-import generated.ListProductResponse;
-import generated.ListShoppingCartProductsRequest;
-import generated.ListShoppingCartProductsResponse;
 import generated.productGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.Scanner;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Serializer;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
 public class Client {
+  /**
+   * Method to show the menu on the execution.
+   *
+   * @param scanner scanner value to select the option.
+   * @return int option.
+   */
   public static int printMenu(Scanner scanner) {
     System.out.println("Select one option:");
     System.out.println("[1] - List all products");
@@ -51,10 +26,9 @@ public class Client {
     System.out.println("[7] - Calculate the total purchase amount.");
     System.out.println("[8] - Export products to a file.");
     System.out.println("[9] - Import products from a file.");
-    System.out.println("[10] - Finish execution");
+    System.out.println("[10] - Finish execution.");
     return scanner.nextInt();
   }
-
 
   /**
    * Main Method of class.
@@ -67,100 +41,39 @@ public class Client {
     int portNumber = Integer.parseInt(args[1]);
     String jsonImportFileName = args[2];
     String jsonExportFileName = args[3];
-    ManagedChannel channel = ManagedChannelBuilder
-        .forAddress(channelName, portNumber).usePlaintext().build();
+    String xmlImportFileName = args[5];
+    String xmlExportFileName = args[4];
+    ManagedChannel channel = ManagedChannelBuilder.forAddress(channelName, portNumber).usePlaintext().build();
     productGrpc.productBlockingStub prodStub = productGrpc.newBlockingStub(channel);
-    Scanner scanner = new Scanner(System.in);
     int option;
     int aux;
-
+    FileAccess fileAccessJsonFile = new FileAccessJsonFile(channel);
+    FileAccess fileAccessXmlFile = new FileAccessXmlFile(channel);
+    ProductActions productActions = new ProductActionsWithDatabase(channel);
+    ShoppingCartActions shoppingCartActions = new ShoppingCartActionsWithDatabase(channel);
+    Scanner scanner = new Scanner(System.in);
     do {
       option = printMenu(scanner);
       if (option == 1) {
-        try {
-          ListProductRequest request = ListProductRequest.newBuilder().build();
-          Iterator<ListProductResponse> listProductResponseIterator = prodStub.listProduct(request);
-          while (listProductResponseIterator.hasNext()) {
-            ListProductResponse next = listProductResponseIterator.next();
-            System.out.printf("Id: %d Name: %s Stock: %d Price: %.2f\n",
-                next.getId(), next.getName(), next.getStock(), next.getPrice());
-          }
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
+        productActions.listProduct();
       }
       if (option == 2) {
-        System.out.println("Type product id: ");
-        int id = scanner.nextInt();
-        ListByIdRequest request = ListByIdRequest.newBuilder().setId(id).build();
-        ListByIdResponse response = prodStub.listById(request);
-        System.out.println(response);
+        productActions.listProductById();
       }
       if (option == 3) {
-        scanner.nextLine();
-        System.out.println("Type the product name");
-        String name = scanner.nextLine();
-        System.out.println("Type the number of product inserted on stock");
-        int stock = scanner.nextInt();
-        System.out.println("Type the price of the product");
-        float price = scanner.nextFloat();
-        AddProductRequest request =
-            AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
-        AddProductResponse response = prodStub.addProduct(request);
-        System.out.println(response.getName());
+        productActions.addProductToDatabase();
       }
       if (option == 4) {
-        scanner.nextLine();
-        System.out.println("Type the client name");
-        String name = scanner.nextLine();
-        CreateAShoppingCartRequest createAShoppingCartRequest =
-            generated.CreateAShoppingCartRequest.newBuilder().setName(name).build();
-        CreateAShoppingCartResponse response = prodStub.createAShoppingCart(createAShoppingCartRequest);
-        System.out.println("Cart id: " + response.getId() + "Owner Name: " + response.getName());
+        shoppingCartActions.createAShoppingCart();
       }
-
       if (option == 5) {
-        System.out.println("Type the id of shopping cart");
-        int idCart = scanner.nextInt();
-        System.out.println("Type the id of desired product:");
-        int idProduct = scanner.nextInt();
-        System.out.println("Type the quantity of this product:");
-        int quantity = scanner.nextInt();
-        AddProductsToShoppingCartRequest request =
-            AddProductsToShoppingCartRequest.newBuilder().setIdShoppingCart(idCart).setIdProduct(idProduct)
-                .setQuantity(quantity).build();
-        AddProductsToShoppingCartResponse response = prodStub.addProductsToShoppingCart(request);
-        System.out.println("Shopping Cart Id: " + response.getIdShoppingCart() + " Product ID: "
-            + response.getIdProduct() + " Quantity: " + response.getQuantity());
+        shoppingCartActions.addProductToShoppingCart();
       }
       if (option == 6) {
-        System.out.println("Type your Shopping Cart ID: ");
-        int id = scanner.nextInt();
-        System.out.println("Your Shopping Cart has the products below:");
-         try {
-          ListShoppingCartProductsRequest request =
-              ListShoppingCartProductsRequest.newBuilder().setCartId(id).build();
-          Iterator<ListShoppingCartProductsResponse> listShoppingCartProductsResponseIterator =
-              prodStub.listShoppingCartProducts(request);
-          while (listShoppingCartProductsResponseIterator.hasNext()) {
-            ListShoppingCartProductsResponse next = listShoppingCartProductsResponseIterator.next();
-            System.out.printf("Product Id: %d Product Name: %s  Price: %.2f Quantity: %d \n",
-                next.getIdProduct(), next.getName(), next.getPrice(), next.getQuantity());
-            }
-          } catch (Exception e) {
-           throw new RuntimeException(e);
-          }
+        shoppingCartActions.showShoppingCart();
       }
       if (option == 7) {
-        System.out.println("Type the id of Shopping Cart that you desire to calculate the amount");
-        int shoppingCartId = scanner.nextInt();
-        CalculateTotalAmountRequest calculateTotalAmountRequest =
-            generated.CalculateTotalAmountRequest.newBuilder()
-                .setIdShoppingCart(shoppingCartId).build();
-        CalculateTotalAmountResponse calculateTotalAmountResponse =
-            prodStub.calculateTotalAmount(calculateTotalAmountRequest);
-        float total = calculateTotalAmountResponse.getTotalAmount();
-        System.out.println("Total Amount of sale: R$" + total);
+        shoppingCartActions.calculateTotal();
       }
       if (option == 8) {
         System.out.println("Exporting products from a file");
@@ -171,60 +84,18 @@ public class Client {
           System.out.println("[2] - XML  file. ");
           exportOption = scanner.nextInt();
           if (exportOption == 1) {
-            System.out.println("Downloading data from data base...");
-            DownloadFileRequest downloadFileRequest =
-                DownloadFileRequest.newBuilder().setFileName(jsonImportFileName).build();
-            Iterator<DataChunk> dataChunkIterator = prodStub.downloadFile(downloadFileRequest);
-            while (dataChunkIterator.hasNext()) {
-              DataChunk next = dataChunkIterator.next();
-              FileWriter fileWriter = new FileWriter(jsonImportFileName);
-              fileWriter.write(next.getData());
-              fileWriter.flush();
-              fileWriter.close();
-              break;
-            }
+            System.out.println("Exporting data to a json file");
+            fileAccessJsonFile.exportFile(jsonExportFileName);
           } else if (exportOption == 2) {
-            try {
-              Element root = new Element("Products");
-              ListProductRequest request = ListProductRequest.newBuilder().build();
-              Iterator<ListProductResponse> listProductResponseIterator = prodStub.listProduct(request);
-              while (listProductResponseIterator.hasNext()) {
-                Element productElement = new Element("product");
-                Element idElement = new Element("id");
-                Element nameElement = new Element("name");
-                Element stockElement = new Element("stock");
-                Element priceElement = new Element("price");
-                ListProductResponse next = listProductResponseIterator.next();
-                idElement.appendChild(String.valueOf(next.getId()));
-                nameElement.appendChild(next.getName());
-                stockElement.appendChild(String.valueOf(next.getStock()));
-                priceElement.appendChild(String.valueOf(next.getPrice()));
-                productElement.appendChild(idElement);
-                productElement.appendChild(nameElement);
-                productElement.appendChild(stockElement);
-                productElement.appendChild(priceElement);
-                root.appendChild(productElement);
-              }
-              Document document = new Document(root);
-              File file = new File("products.xml");
-              if (!file.exists()) {
-                file.createNewFile();
-              }
-              FileOutputStream fileOutputStream = new FileOutputStream(file);
-              Serializer serializer = new Serializer(fileOutputStream, "UTF-8");
-              serializer.setIndent(4);
-              serializer.write(document);
-            } catch (Exception e) {
-              throw new RuntimeException(e);
-            }
-
+            System.out.println("Exporting data to a xml file");
+            fileAccessXmlFile.exportFile(xmlExportFileName);
           } else {
             System.out.println("Invalid option");
           }
         } while (exportOption < 1 || exportOption > 2);
       }
       if (option == 9) {
-        System.out.println("Exporting of execution to a file");
+        System.out.println("Import products from a file");
         int importOption = 0;
         do {
           System.out.println("Select the type of file you desire:");
@@ -232,44 +103,11 @@ public class Client {
           System.out.println("[2] - XML file. ");
           importOption = scanner.nextInt();
           if (importOption == 1) {
-            System.out.println("Reading data from the JSON file and store on the database.");
-            byte[] mapData = Files.readAllBytes(Paths.get(jsonExportFileName));
-            Product[] productsArray = null;
-            ObjectMapper objectMapper = new ObjectMapper();
-            productsArray = objectMapper.readValue(mapData, Product[].class);
-            Product[] productList = productsArray;
-            for (Product product : productList) {
-              String name = product.getName();
-              int stock = product.getStock();
-              float price = product.getPrice();
-              AddProductRequest request =
-                  AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
-              AddProductResponse response = prodStub.addProduct(request);
-              System.out.println(response.getName());
-            }
+            System.out.println("Importing data from a json file...");
+            fileAccessJsonFile.importFile(jsonImportFileName);
           } else if (importOption == 2) {
-            System.out.println("Invoke method to import products to the database from a XML file");
-            File file = new File("inputProducts.xml");
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            org.w3c.dom.Document document = documentBuilder.parse(file);
-            document.getDocumentElement().normalize();
-            System.out.println("Root Element: " + document.getDocumentElement().getNodeName());
-            NodeList nodeList = document.getElementsByTagName("product");
-            for (int i = 0; i < nodeList.getLength(); i++) {
-              Node node = nodeList.item(i);
-              System.out.println("Node name " + node.getNodeName());
-              if (node.getNodeType() == Node.ELEMENT_NODE) {
-                org.w3c.dom.Element eElement = (org.w3c.dom.Element) node;
-                String name = eElement.getElementsByTagName("name").item(0).getTextContent();
-                int stock = Integer.parseInt(eElement.getElementsByTagName("stock").item(0).getTextContent());
-                float price = Float.parseFloat(eElement.getElementsByTagName("price").item(0).getTextContent());
-                AddProductRequest request =
-                    AddProductRequest.newBuilder().setName(name).setStock(stock).setPrice(price).build();
-                AddProductResponse response = prodStub.addProduct(request);
-                System.out.println(response.getName());
-              }
-            }
+            System.out.println("Importing data from a xml file...");
+            fileAccessXmlFile.importFile(xmlImportFileName);
           } else {
             System.out.println("Invalid option");
           }
@@ -289,6 +127,5 @@ public class Client {
         }
       } while (aux < 1 || aux > 2);
     } while (aux == 1);
-    scanner.close();
   }
 }

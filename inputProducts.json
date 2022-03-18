@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "name": "Mandolate",
+    "stock": 10,
+    "price": 2.00
+  },
+  {
+    "id": 2,
+    "name": "Dolly 2l",
+    "stock": 10,
+    "price": 4.50
+    
+  },
+  {
+    "id": 3,
+    "name": "Abóbora",
+    "stock": 10,
+    "price": 5.00
+  }
+]
